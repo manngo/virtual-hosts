@@ -1,0 +1,35 @@
+html {
+	--serif: "Source Serif Pro", serif;
+	--monospace: "Source Code Pro", monospace;
+}
+html, body {
+	padding: 0;
+	margin: 0;
+	height: 100vh;
+	width: 100vw;
+	font-size: 100%;
+}
+
+form#hosts {
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+}
+
+form#hosts textarea[name="content"] {
+	padding: 1em;
+	tab-size: 4;
+	-moz-tab-size: 4;
+	flex: 1;
+	font-size: 1.2em;
+	font-family: var(--monospace);
+	border: none;
+}
+form#hosts button[name="save"] {
+	
+	
+}

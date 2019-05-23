@@ -1,0 +1,17 @@
+{
+  "name": "Hosts Editor",
+  "version": "1.0.0",
+  "description": "Edit Hosts File",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/manngo/edit-hosts",
+  "keywords": [
+  ],
+  "author": "Mark Simon",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^5.0.0"
+  }
+}
