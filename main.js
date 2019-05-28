@@ -8,7 +8,7 @@
 	require('electron-reload')(__dirname);
 
 let window;
-init();
+
 function init() {
 	window = new BrowserWindow({
 		width: 800,

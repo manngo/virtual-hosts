@@ -16,8 +16,8 @@
 			}
 
 		function doit(event) {
-			if(!exported.platform) return;
 			event.preventDefault();
+			if(!exported.platform) return;
 			var vhost=platforms[exported.platform].vhost;
 			vhost=vhost.sprintf({
 				htdocs: platforms[exported.platform][os].htdocs,
