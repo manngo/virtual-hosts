@@ -1,35 +1,237 @@
-html {
-	--serif: "Source Serif Pro", serif;
-	--monospace: "Source Code Pro", monospace;
-}
-html, body {
-	padding: 0;
-	margin: 0;
-	height: 100vh;
-	width: 100vw;
-	font-size: 100%;
-}
+/*	Core
+	================================================ */
 
-form#hosts {
-	box-sizing: border-box;
-	height: 100%;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	margin: 0;
-	padding: 0;
-}
+	html {
+		--serif: "Source Serif Pro", serif;
+		--sans-serif: "Source Sans Pro", sans-serif;
+		--monospace: "Source Code Pro", monospace;
+	}
+	html, body {
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+		height: 100vh;
+		width: 100vw;
+		font-size: 100%;
+	}
+/*	Layout
+	================================================
+	form#controls
+		div#tabs
+		div#misc
+	div#forms
+		form#…
+		form#…
+		form#…
+	footer
+	================================================ */
 
-form#hosts textarea[name="content"] {
-	padding: 1em;
-	tab-size: 4;
-	-moz-tab-size: 4;
-	flex: 1;
-	font-size: 1.2em;
-	font-family: var(--monospace);
-	border: none;
-}
-form#hosts button[name="save"] {
-	
-	
-}
+	body {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	form#controls {
+		flex: 1;
+		display: flex;
+	}
+	form#controls>div#tabs {
+
+	}
+	form#controls>div#misc {
+
+	}
+
+	div#forms {
+		flex: 1;
+	}
+	footer {
+		flex: 1;
+	}
+
+/*	Forms
+	================================================ */
+
+	div#forms {
+		box-sizing: border-box;
+	}
+	div#forms form {
+		box-sizing: border-box;
+		height: 100%;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		display: none;
+		height: calc(100vh - 4em);
+	}
+	div#forms form.selected {
+		display: flex;
+		flex: 1;
+	}
+
+/*	Buttons
+	================================================ */
+
+	form#controls {
+		background: linear-gradient(to bottom, #f8f8f8, #ccc);
+		height: 30px;
+		padding: 0;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		position: relative;
+		justify-content: space-between;
+	}
+	form#controls>div {
+		border: none;
+		padding: 0;
+	}
+	form#controls>div#tabs {
+		flex: 1;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+	}
+	form#controls>div#tabs>button {
+		border: thin solid #999;
+		border-style: none solid none none;
+		background-color: #ddd;
+		outline: none;
+		font-family: var(--sans-serif);
+		text-shadow: 0 1px 0 white;
+		font-size: .9rem;
+		padding: .375rem .5rem;
+	}
+	form#controls>div#tabs>button.selected {
+		background-color: #f8f8f8;
+		border-bottom: thin solid #f8f8f8;
+	}
+
+/*	Footer
+	================================================ */
+
+	footer {
+		box-sizing: border-box;
+		background: linear-gradient(to bottom, #f8f8f8, #ccc);
+		height: 2em;
+		padding: 0rem .5rem .25rem 1rem;
+		border-top: thin solid #ccc;
+		pointer-events: none;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+
+	footer>p {
+		box-sizing: border-box;
+		margin: 0;
+		padding: .65rem;
+		font-family: var(--sans-serif);
+		font-size: .9rem;
+		text-shadow: 0 1px 0 white;
+	}
+
+	footer>p#message[data-status="Edited"] {
+		color: red;
+	}
+
+/*	Content
+	================================================ */
+
+	form {
+	}
+
+	div#forms form textarea[name="content"] {
+		padding: 1em;
+		tab-size: 4;
+		-moz-tab-size: 4;
+		flex: 1;
+		font-family: var(--monospace);
+		border: none;
+		outline: none;
+		width: 100%;
+		height: 100%;
+		qoverflow-y: scroll;
+		qoverflow-x: scroll;
+		box-sizing: border-box;
+		overflow: auto;
+		white-space: nowrap;
+	}
+	form#hosts button[name="save"] {
+
+
+	}
+
+
+	form textarea[name="content"],
+	div.line-numbers {
+		font-size: 1rem;
+		padding-top: 1rem;
+		font-family: var(--monospace);
+	}
+
+
+/*	Line Numbers
+	================================================ */
+
+	div.line-numbers {
+		box-sizing: border-box;
+		white-space: pre;
+		width: 4em;
+		text-align: right;
+		padding-right: .5rem;
+		qbackground-color: #eee;
+		overflow: auto;
+		border-right: thin solid #ccc;
+	}
+	div.line-numbers::-webkit-scrollbar {
+	    display: none;
+	}
+
+/*	Generator
+	================================================ */
+
+	div#forms form#generator {
+		display: text;
+		flex-direction: column;
+		font-family: var(--sans-serif);
+		padding: 1em;
+	}
+
+	form#generator label {
+		font-weight: bold;
+		display: block;
+		margin-top: .5rem;
+		margin-bottom: .25rem;
+	}
+	form#generator button[name="generate"] {
+		color: #333;
+		margin-top: .5rem;
+		border: thin solid #ddd;
+		width: 12rem;
+		border-radius: 4px;
+		padding: .5rem .75rem;
+		background-color: #eee;
+		font-size: 1rem;
+		outline: none;
+	}
+	form#generator button[name="generate"]:hover {
+		background-color: #ddd;
+	}
+	div#generated {
+		display: flex;
+	}
+	div#forms form#generator textarea[name="content"] {
+		resize: none;
+		height: 100%;
+	}
+	div#forms form#generator input[type="text"] {
+		box-sizing: border-box;
+		font-family: var(--monospace);
+		padding: .25rem .5rem;
+		font-size: 1rem;
+		width: 100%;
+		outline: none;
+	}

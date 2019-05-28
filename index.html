@@ -1,22 +1,67 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Edit Hosts File</title>
-	<link rel="stylesheet" type="text/css" href="main.css">
-    <script>
-		document.addEventListener('DOMContentLoaded',init);
-		function init() {
-			require('./renderer.js');
-			require('./scripts/main.js');
-		}
-    </script>
-  </head>
-  <body>
-    <form id="hosts">
-		<textarea name="content"></textarea>
-		<button name="save">Save</button>
-	</div>
-
-  </body>
+	<head>
+		<meta charset="UTF-8">
+		<title>Edit hosts File</title>
+		<link rel="stylesheet" type="text/css" href="main.css">
+		<link rel="stylesheet" type="text/css" href="node_modules/codemirror/lib/codemirror.css" media="all">
+		<!--script src="scripts/main.js"></script-->
+		<!-- <script src="scripts/utilities.js"></script> -->
+		<!-- <script src="scripts/main.js"></script> -->
+		<script>
+			document.addEventListener('DOMContentLoaded',init);
+			function init() {
+				//	require('./renderer.js');
+				require('./scripts/utilities.js');
+				require('./scripts/main.js');
+				require('./scripts/do-virtual-hosts.js');
+			}
+		</script>
+		<script src="scripts/do-virtual-hosts.js"></script>
+	</head>
+	<body>
+		<form id="controls">
+			<div id="tabs">
+				<button id="show-hosts-file" value="0">hosts File</button>
+				<button id="show-httpd-conf" value="1">httpd.conf</button>
+				<button id="show-virtual-hosts" value="2">Virtual Hosts</button>
+				<button id="show-generator" value="3">Generator</button>
+			</div>
+			<div id="misc">
+				<select name="platform">
+					<option value="">Platform …</option>
+					<option value="xampp">XAMPP</option>
+					<option value="mamp">MAMP</option>
+				</select>
+<!--
+				<input type="search" name="text"><button name="find">Find</button>
+-->
+			</div>
+		</form>
+		<div id="forms">
+			<form id="hosts-file">
+				<textarea name="content">Open hosts file or Select Platform</textarea>
+				<!--button name="save"findave</button-->
+			</form>
+			<form id="httpd-conf">
+				<textarea name="content">Open httpd.conf file or Select Platform</textarea>
+				<!--button name="save">Save</button-->
+			</form>
+			<form id="virtual-hosts">
+				<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
+				<!--button name="save">Save</button-->
+			</form>
+			<form id="generator">
+				<div><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></div>
+				<div><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></div>
+				<div><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"></div>
+				<button name="generate">Generate</button>
+				<div id="generated"><textarea name="content">The cat sat on the mat</textarea></div>
+			</form>
+		</div>
+		<footer>
+			<p id="path">Path</p>
+			<p id="message" data-status="">Message</p>
+		</footer>
+	</body>
 </html>

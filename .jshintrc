@@ -16,6 +16,9 @@
 		"document": true,
 		"alert": true,
 		"FileReader": true,
-		"NodeList": true
+		"XMLHttpRequest": true,
+		"NodeList": true,
+		"require": true,
+		"__dirname": true
 	}
 }

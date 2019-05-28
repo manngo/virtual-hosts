@@ -1,0 +1,167 @@
+XAMPP
+
+	mac
+		htdocs	/Applications/XAMPP/xamppfiles/htdocs
+	win
+		htdocs	C:/XAMPP/htdocs/
+
+
+[htdocs]
+[project]
+[domain]
+[root]
+
+#	Required Default
+	<VirtualHost *:80>
+	    ServerName localhost
+	    DocumentRoot [htdocs]
+	    <Directory [htdocs]>
+	    	Options Indexes FollowSymLinks Includes execCGI
+	    	AllowOverride All
+	    	Require all granted
+		</Directory>
+	</VirtualHost>
+
+#	[project]: [domain]
+	<VirtualHost *:80>
+		ServerName [domain]
+		ServerAlias [domain]
+		DocumentRoot [root]
+		ErrorLog logs/[project].log
+		CustomLog logs/[project].log combined
+		<Directory [root]>
+			Options FollowSymLinks Indexes
+			AllowOverride All
+			Require all granted
+		</Directory>
+	</VirtualHost>
+
+XAMPP Windows
+
+	Installation
+
+		C:\xampp
+
+	C:\xampp\apache\conf\httpd.conf
+
+		# Virtual hosts
+		Include conf/extra/httpd-vhosts.conf
+
+	C:\xampp\apache\conf\conf\extra\httpd-vhosts.conf
+
+
+#	[project]: [domain]
+
+		<VirtualHost *:80>
+			ServerName www.example.com
+			ServerAlias www.example.com
+			DocumentRoot "C:\Users\DWTStudent\Desktop/australia"
+			ErrorLog "logs/australia.log"
+			CustomLog "logs/australia.log" combined
+			<Directory "C:\Users\DWTStudent\Desktop/australia">
+				Options FollowSymLinks Indexes
+				AllowOverride All
+				Require all granted
+			</Directory>
+		</VirtualHost>
+
+MAMP Windows
+
+	Installation
+
+		Disable	[]	MAMP PRO
+				[]	Install Apple Bonjour
+		C:\MAMP
+
+	C:\MAMP\bin\apache\conf\httpd.conf
+	C:\MAMP\conf\apache\httpd.conf
+
+		# Virtual hosts
+		Include conf/extra/httpd-vhosts.conf
+
+	C:\MAMP\bin\apache\conf\extra\httpd-vhosts.conf
+
+#	[project]: [domain]
+	NameVirtualHost *:80
+
+	<VirtualHost *:80>
+		ServerName [domain]
+		ServerAlias [domain]
+		DocumentRoot "[root]"
+		ServerAdmin webmaster@www.example.com
+		ErrorLog "logs/[project].log"
+		CustomLog "logs/[project].log" common
+		<directory "[root]">
+			Options Indexes FollowSymLinks
+			AllowOverride all
+			Order Deny,Allow
+			Deny from all
+			Allow from 127.0.0.1
+		</directory>
+	</VirtualHost>
+
+	C:\MAMP\db\mysql
+
+		Delete ib_logfile0, ib_logfile1, mysql-bin.index
+
+WampServer
+
+	Installing
+
+		Windows Defender Warning
+			More info
+			Run Anyway
+
+		C:\Wamp64
+		C:\Wamp64
+
+	C:\wamp64\bin\apache\apache2.4.39\conf\httpd.conf
+	Wamp Control Panel > Apache > httpd.conf
+
+		# Virtual hosts
+		Include conf/extra/httpd-vhosts.conf
+
+	C:\wamp64\bin\apache\apache2.4.39\conf\extra\httpd-vhosts.conf
+	Wamp Control Panel > Apache > httpd-vhosts.conf
+
+		<VirtualHost *:80>
+			ServerName www.example.com
+			DocumentRoot "c:/users/dwtstudent/desktop/australia"
+			<Directory  "c:/users/dwtstudent/desktop/australia/">
+				Options +Indexes +Includes +FollowSymLinks +MultiViews
+				AllowOverride All
+				Require local
+			</Directory>
+		</VirtualHost>
+
+	Built-in Tool
+
+	http://localhost > Add a Virtual Host
+	However, it competes with hand-generated data
+
+AMPPS Windows
+
+	C:\Program Files (x86)\Ampps\conf\httpd.conf
+
+		# Virtual hosts
+		Include conf/extra/httpd-vhosts.conf
+
+	C:\Program Files (x86)\Ampps\apache\conf\extra\/httpd-vhosts.conf
+
+		<VirtualHost australia.example.com:80>
+			<Directory "c:/users/dwtstudent/desktop/australia">
+				Options FollowSymLinks Indexes
+				AllowOverride All
+				Order deny,allow
+				allow from All
+			</Directory>
+			ServerName australia.example.com
+			ServerAlias australia.example.com
+			ScriptAlias /cgi-bin/ "c:/users/dwtstudent/desktop/australia/cgi-bin/"
+			DocumentRoot "c:/users/dwtstudent/desktop/australia"
+			ErrorLog "C:/Program Files (x86)/Ampps/apache/logs/australia.example.com.err"
+			CustomLog "C:/Program Files (x86)/Ampps/apache/logs/australia.example.com.log" combined
+		</VirtualHost>
+
+	http://localhost/ampps > Add Domain | Manage Domains
+	Competes with Manual Virtual Hosts
