@@ -27,7 +27,7 @@ To add a virtual host:
 _Needless to say, you can really make a mess here, and break things. Be Careful._
 
 - Select the `hosts File` tab.
-- To add a local virtual domain, add somthing like the following:
+- To add a local virtual domain, add something like the following:
 
 	```
 	127.0.0.1	www.example.com
