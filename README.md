@@ -68,7 +68,7 @@ You will need to add the following:
 -	__Document Root:__ The full path name of you web root folder. For example:
 
 	Mac: `/Users/mark/Documents/example`
-	Win: `C:\users\mark\desktop\example`
+	Win: `C:\users\mark\Documents\example`
 
 	For Windows, you can use the forward slash (`/`) or backslash (`\`).
 
