@@ -64,10 +64,10 @@ The Virtual Host directive needs to be added. The easy way is to use the `Genera
 You will need to add the following:
 
 -	__Project Name:__ A simple name for the project, such as `example`. It will also be used to name the log files.
--	__Virtual Domain:__ The Domain Name, such as `www.example.com`. When working, you can use `https://www.example.com` from your browser.
+-	__Virtual Domain:__ The Domain Name, such as `www.example.com` (_without_ the `http://` protocol). When working, you can use `http://www.example.com` from your browser.
 -	__Document Root:__ The full path name of you web root folder. For example:
 
-	Mac: `/Users/mark/Documents/example` 
+	Mac: `/Users/mark/Documents/example`
 	Win: `C:\users\mark\desktop\example`
 
 	For Windows, you can use the forward slash (`/`) or backslash (`\`).
