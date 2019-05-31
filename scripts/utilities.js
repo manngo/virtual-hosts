@@ -327,6 +327,24 @@
 		}
 	};
 
+/*	Allow Stretching
+	================================================
+	jx.findInTextarea(string,textarea);
+	================================================ */
+
+	jx.findInTextarea=function(string,textarea,start) {
+		if(!string || !textarea) return;
+		if(start===undefined) start=0;
+		var position=textarea.value.toLowerCase().indexOf(string,start);
+		// var position=textarea.value.search(new RegExp(string,'i'),start);
+		if(position>=0) {
+			textarea.selectionEnd = textarea.selectionStart = position;
+			textarea.blur();
+			textarea.focus();
+			textarea.selectionEnd = position+string.length;
+		}
+		return position;
+	};
 
 /*	Useful, but not part of the Package
 	================================================
@@ -585,3 +603,6 @@
 			},
 
 	};
+
+//	Export
+	module.exports={jx,DOM};

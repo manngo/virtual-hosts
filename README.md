@@ -46,8 +46,6 @@ _Needless to say, you can really make a mess here, and break things. Be Careful.
 	#Include etc/extra/httpd-vhosts.conf
 	```
 
-	Sorry, `Find …` isn’t working yet.
-
 -	Remove the comment (`#`):
 
 	```

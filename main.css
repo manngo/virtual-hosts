@@ -24,6 +24,8 @@
 		form#…
 		form#…
 	footer
+		div#search
+		div#info
 	================================================ */
 
 	body {
@@ -33,7 +35,7 @@
 	}
 
 	form#controls {
-		flex: 1;
+		qflex: 1;
 		display: flex;
 	}
 	form#controls>div#tabs {
@@ -47,7 +49,7 @@
 		flex: 1;
 	}
 	footer {
-		flex: 1;
+		qflex: 1;
 	}
 
 /*	Forms
@@ -55,6 +57,7 @@
 
 	div#forms {
 		box-sizing: border-box;
+		height: calc(100vh - 14em);
 	}
 	div#forms form {
 		box-sizing: border-box;
@@ -63,7 +66,6 @@
 		margin: 0;
 		padding: 0;
 		display: none;
-		height: calc(100vh - 4em);
 	}
 	div#forms form.selected {
 		display: flex;
@@ -114,26 +116,34 @@
 	footer {
 		box-sizing: border-box;
 		background: linear-gradient(to bottom, #f8f8f8, #ccc);
-		height: 2em;
 		padding: 0rem .5rem .25rem 1rem;
 		border-top: thin solid #ccc;
 		pointer-events: none;
+		display: flex;
+		flex-direction: column;
+	}
+	form#search {
+		display: none;
+		background-color: #f8f8f8;
+		padding: .5rem;
+	}
+	footer>div#info {
+		padding: 0;
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
 	}
 
-
-	footer>p {
+	footer>div#info>p {
 		box-sizing: border-box;
 		margin: 0;
-		padding: .65rem;
+		padding: .25rem;
 		font-family: var(--sans-serif);
 		font-size: .9rem;
 		text-shadow: 0 1px 0 white;
 	}
 
-	footer>p#message[data-status="Edited"] {
+	footer>div#info>p#message[data-status="Edited"] {
 		color: red;
 	}
 
@@ -170,6 +180,7 @@
 		font-size: 1rem;
 		padding-top: 1rem;
 		font-family: var(--monospace);
+		resize: none;
 	}
 
 

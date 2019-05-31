@@ -1,9 +1,7 @@
  'use strict';
 
 //	Modules to control application life and create native browser window
-	const stuff = require('electron');
 	const {app, BrowserWindow, Menu} = require('electron');
-	console.log(require.resolve('electron'))
 	const path = require('path');
 	const { ipcRenderer } = require('electron');
 //	require('electron-reload')(__dirname);
@@ -106,15 +104,17 @@ function init() {
 //	window.loadFile('index.html');
 	window.loadURL(path.join('file://', __dirname, '/index.html'));
 //	window.webContents.setDevToolsWebContents(devtools.webContents);
-//	window.webContents.openDevTools();
+	window.webContents.openDevTools();
 
 	window.on('closed', function () {
 		window = null;
   	});
 }
 
-app.on('ready', init);
+console.log({app, BrowserWindow, Menu})
 
+app.on('ready', init);
+console.log('hmm')
 app.on('window-all-closed', function () {
 	//	if (process.platform !== 'darwin')
 	app.quit();

@@ -4,7 +4,6 @@
 		<meta charset="UTF-8">
 		<title>Edit hosts File</title>
 		<link rel="stylesheet" type="text/css" href="main.css">
-		<link rel="stylesheet" type="text/css" href="node_modules/codemirror/lib/codemirror.css" media="all">
 		<!--script src="scripts/main.js"></script-->
 		<!-- <script src="scripts/utilities.js"></script> -->
 		<!-- <script src="scripts/main.js"></script> -->
@@ -17,7 +16,7 @@
 				require('./scripts/do-virtual-hosts.js');
 			}
 		</script>
-		<script src="scripts/do-virtual-hosts.js"></script>
+		<!-- <script src="scripts/do-virtual-hosts.js"></script> -->
 	</head>
 	<body>
 		<form id="controls">
@@ -33,23 +32,17 @@
 					<option value="xampp">XAMPP</option>
 					<option value="mamp">MAMP</option>
 				</select>
-<!--
-				<input type="search" name="text"><button name="find">Find</button>
--->
 			</div>
 		</form>
 		<div id="forms">
 			<form id="hosts-file">
 				<textarea name="content">Open hosts file or Select Platform</textarea>
-				<!--button name="save"findave</button-->
 			</form>
 			<form id="httpd-conf">
 				<textarea name="content">Open httpd.conf file or Select Platform</textarea>
-				<!--button name="save">Save</button-->
 			</form>
 			<form id="virtual-hosts">
 				<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
-				<!--button name="save">Save</button-->
 			</form>
 			<form id="generator">
 				<div><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></div>
@@ -59,9 +52,9 @@
 				<div id="generated"><textarea name="content">The cat sat on the mat</textarea></div>
 			</form>
 		</div>
+		<form id="search"><input type="text" name="text"><button name="find">Find</button></form>
 		<footer>
-			<p id="path">Path</p>
-			<p id="message" data-status="">Message</p>
+			<div id="info"><p id="path">Path</p><p id="message" data-status="">Message</p></div>
 		</footer>
 	</body>
 </html>
