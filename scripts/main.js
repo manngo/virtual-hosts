@@ -16,7 +16,7 @@
 
 //	Environment
 
-	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, platform, test, searchForm,
+	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, platform, test, searchForm, about, showAbout,
 		searchData={string: '', fromIndex: 0};
 	var os=process.platform;
 
@@ -36,7 +36,7 @@
 				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'C:/XAMPP/htdocs/',
 			},
-			vhost: '#\tXAMPP\tRequired Default\n\t<VirtualHost *:80>\n\tServerName localhost\n\tDocumentRoot "[htdocs]"\n\t<Directory "[htdocs]">\n\t\tOptions Indexes FollowSymLinks Includes execCGI\n\t\tAllowOverride All\n\t\tRequire all granted\n\t\t</Directory>\n\t</VirtualHost>\n\n#\t[project]: [domain]\n\t<VirtualHost *:80>\n\t\tServerName [domain]\n\t\tServerAlias [domain]\n\t\tDocumentRoot "[root]"\n\t\tErrorLog logs/[project].log\n\t\tCustomLog logs/[project].log combined\n\t\t<Directory "[root]">\n\t\t\tOptions FollowSymLinks Indexes\n\t\t\tAllowOverride All\n\t\t\tRequire all granted\n\t\t</Directory>\n\t</VirtualHost>'
+			vhost: '#\tXAMPP\tRequired Default\t!! Do Not Repeat !!\n\t<VirtualHost *:80>\n\tServerName localhost\n\tDocumentRoot "[htdocs]"\n\t<Directory "[htdocs]">\n\t\tOptions Indexes FollowSymLinks Includes execCGI\n\t\tAllowOverride All\n\t\tRequire all granted\n\t\t</Directory>\n\t</VirtualHost>\n\n#\t[project]: [domain]\n\t<VirtualHost *:80>\n\t\tServerName [domain]\n\t\tServerAlias [domain]\n\t\tDocumentRoot "[root]"\n\t\tErrorLog logs/[project].log\n\t\tCustomLog logs/[project].log combined\n\t\t<Directory "[root]">\n\t\t\tOptions FollowSymLinks Indexes\n\t\t\tAllowOverride All\n\t\t\tRequire all granted\n\t\t</Directory>\n\t</VirtualHost>'
 		},
 		mamp:	{
 			darwin: {
@@ -49,7 +49,7 @@
 				vhosts: 'C:/MAMP/bin/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'C:/XAMPP/htdocs/',
 			},
-			vhost: '#\tMAMP\t[project]: [domain]\n\tNameVirtualHost *:80\n\n\t<VirtualHost *:80>\n\t\tServerName [domain]\n\t\tServerAlias [domain]\n\t\tDocumentRoot "[root]"\n\t\tServerAdmin webmaster@www.example.com\n\t\tErrorLog "logs/[project].log"\n\t\tCustomLog "logs/[project].log" common\n\t\t<directory "[root]">\n\t\t\tOptions Indexes FollowSymLinks\n\t\t\tAllowOverride all\n\t\t\tOrder Deny,Allow\n\t\t\tDeny from all\n\t\t\tAllow from 127.0.0.1\n\t\t</directory>\n\t</VirtualHost>',
+			vhost: '#\t!! Do Not Repeat !!\n\tNameVirtualHost *:80\n\n#\tMAMP\t[project]: [domain]\n\n\t<VirtualHost *:80>\n\t\tServerName [domain]\n\t\tServerAlias [domain]\n\t\tDocumentRoot "[root]"\n\t\tServerAdmin webmaster@www.example.com\n\t\tErrorLog "logs/[project].log"\n\t\tCustomLog "logs/[project].log" common\n\t\t<directory "[root]">\n\t\t\tOptions Indexes FollowSymLinks\n\t\t\tAllowOverride all\n\t\t\tOrder Deny,Allow\n\t\t\tDeny from all\n\t\t\tAllow from 127.0.0.1\n\t\t</directory>\n\t</VirtualHost>',
 		}
 	};
 
@@ -87,6 +87,10 @@
 			}
 			module.exports.platform=platform;
 		});
+
+		about=document.querySelector('div#about');
+		jx.draggable(about);
+		showAbout=jx.popup(about,null,{escape: true});
 
 		function select(button,event) {
 			event.preventDefault();
@@ -277,6 +281,14 @@ if(DEVELOPMENT) console.log('save');
 //		searchData.fromIndex=document.activeElement.selectionStart||0;
 			searchForm.elements['text'].focus();
 			searchForm.elements['text'].select();
+			document.addEventListener('keydown',unfind);
+	}
+	function unfind(event) {
+//		console.log(event.key);
+		if(event.key=='Escape') {
+			document.removeEventListener('keydown',unfind);
+			searchForm.style.display='none';
+		}
 	}
 
 	function findAgain() {		if(DEVELOPMENT) console.log('find again');
@@ -299,4 +311,7 @@ if(DEVELOPMENT) console.log('save');
 	});
 	ipcRenderer.on('FINDAGAIN',(event,data)=>{
 		findAgain();
+	});
+	ipcRenderer.on('ABOUT',(event,data)=>{
+		showAbout();
 	});

@@ -2,7 +2,7 @@
 
 //	Modules to control application life and create native browser window
 	const stuff = require('electron');
-	const {app, BrowserWindow, Menu} = require('electron');
+	const {app, BrowserWindow, Menu, MenuItem, shell} = require('electron');
 	console.log(require.resolve('electron'))
 	const path = require('path');
 	const { ipcRenderer } = require('electron');
@@ -19,7 +19,7 @@ function init() {
 		}
 	});
 	window.setTitle('Edit hosts File');
-	var menuTemplate=[
+	var menu=[
         {
             label: 'Edit hosts File',
             submenu: [
@@ -70,6 +70,11 @@ function init() {
 				    accelerator: 'CmdOrCtrl+V',
 				    click: function (menuItem, focusedWindow) { focusedWindow.webContents.paste(); }
 				},
+				{
+					label: 'Select All',
+				    accelerator: 'CmdOrCtrl+A',
+				    click: function (menuItem, focusedWindow) { focusedWindow.webContents.selectAll(); }
+				},
 				{type:'separator'},
 				{
 					label: 'Find …',
@@ -80,14 +85,39 @@ function init() {
 					label: 'Find Again',
 					accelerator: 'CmdOrCtrl+G',
 					click: () => window.webContents.send('FINDAGAIN', 'Find Again')
-				}
+				},
 			]
-
+		},
+		{
+		    role: 'help',
+		    submenu: [
+				{
+					label: 'About …',
+					click: () => window.webContents.send('ABOUT', 'About …')
+				},
+				{
+					label: 'Edit Hosts Home',
+//					icon: 'images/external.png',
+					click: () => {
+						shell.openExternal('https://github.com/manngo/edit-hosts');
+					}
+				},
+				{
+					label: 'Internotes Virtual Hosts',
+//					icon: 'images/external.png',
+					click: () => {
+						shell.openExternal('https://www.internotes.site/virtual-hosts');
+					}
+				},
+			]
 		}
-    ];
 
-	var developmentMenu={
+    ];
+	menu=Menu.buildFromTemplate(menu);
+
+	var developmentMenu=[{
 		label: 'Development',
+//		before: 'Help',
 		submenu: [
 			{
 				label: 'Show Development Tools',
@@ -98,11 +128,14 @@ function init() {
 				click: function (menuItem, focusedWindow) { window.webContents.openDevTools({mode: 'detach'}); }
 			},
 		]
-	};
+	}];
 
-	menuTemplate.push(developmentMenu);
+//	menuTemplate.push(developmentMenu);
 
-	Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate));
+	developmentMenu=Menu.buildFromTemplate(developmentMenu);
+
+	Menu.setApplicationMenu(menu);
+
 //	window.loadFile('index.html');
 	window.loadURL(path.join('file://', __dirname, '/index.html'));
 //	window.webContents.setDevToolsWebContents(devtools.webContents);

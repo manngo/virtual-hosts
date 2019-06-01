@@ -246,3 +246,28 @@
 		width: 100%;
 		outline: none;
 	}
+
+/*	About
+	================================================ */
+
+	div#about {
+		display: none;
+	}
+
+
+	div#about {
+		position: fixed;
+		top: 0; bottom: 0; left: 0; right: 0;
+		width: 200px;height: 160px;
+		margin: auto;
+		background-color: white;
+		border: thick solid #4682B4;
+		padding: 1em;
+		box-shadow: 4px 4px 4px #666;
+		overflow: auto;
+		-moz-tab-size: 4;
+		tab-size: 4;
+	}
+	div#about h2, div#about h3 {
+		color: #4682B4;
+	}

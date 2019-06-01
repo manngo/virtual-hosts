@@ -19,6 +19,7 @@
 		"XMLHttpRequest": true,
 		"NodeList": true,
 		"require": true,
-		"__dirname": true
+		"__dirname": true,
+		"module": true
 	}
 }

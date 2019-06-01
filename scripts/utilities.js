@@ -604,5 +604,44 @@
 
 	};
 
+
+	jx.popup=function(element,button,options) {
+		if(!options) options={};
+		options={
+			backgroundStyle: options.backgroundStyle || 'background-color: black; opacity: .3; position: fixed; top: 0; left: 0; width: 100%; height: 100%;',
+			backgroundId: options.backgroundId || 'background',
+			escape: !!options.escape,
+		};
+		var background=document.createElement('div');
+		background.style.cssText=options.backgroundStyle;
+		background.id=options.backgroundId;
+		background.onclick=hide;
+		document.body.appendChild(background);
+
+		if(button) {
+			button=document.querySelector(button);
+			button.onclick=show;
+		}
+
+		background.style.zIndex=1;
+		element.style.zIndex=2;
+
+		hide();
+		function show() {
+			element.style.display=background.style.display='block';
+			// element.style.width=element.offsetWidth+'px';
+			// element.style.height=element.offsetHeight+'px';
+			// element.style.top=element.style.right=element.style.bottom=element.style.left=0;
+			if(options.escape) document.addEventListener('keyup',escape,false);
+		}
+		function hide() {
+			element.style.display=background.style.display='none';
+			if(options.escape) document.removeEventListener('keyup',escape,false);
+		}
+		function escape(e) {
+			if(e.keyCode==27) hide();
+		}
+		return show;
+	};
 //	Export
 	module.exports={jx,DOM};
