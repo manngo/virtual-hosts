@@ -7,7 +7,10 @@
 	"keywords": [],
 	"author": "Mark Simon",
 	"license": "CC0-1.0",
-	"devDependencies": {},
+	"devDependencies": {
+		"electron": "^5.0.2",
+		"electron-packager": "^13.1.1"
+	},
 	"dependencies": {
 		"codemirror": "^5.47.0",
 		"electron-reload": "^1.4.0",
@@ -16,17 +19,6 @@
 		"temp": "^0.9.0"
 	},
 	"productName": "Edit Hosts File",
-	"build": {
-		"appId": "com.webcraft101.edit-hosts",
-		"mac": {
-			"category": "your.app.category.type"
-		},
-		"win": {
-			"target": [
-				"zip"
-			]
-		}
-	},
 	"scripts": {
 		"start": "electron .",
 		"pack": "electron-builder --dir",

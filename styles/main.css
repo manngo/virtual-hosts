@@ -7,6 +7,7 @@
 		--monospace: "Source Code Pro", monospace;
 	}
 	html, body {
+		font-family: var(--sans-serif);
 		box-sizing: border-box;
 		padding: 0;
 		margin: 0;
@@ -254,11 +255,10 @@
 		display: none;
 	}
 
-
 	div#about {
 		position: fixed;
 		top: 0; bottom: 0; left: 0; right: 0;
-		width: 200px;height: 160px;
+		width: 480px; height: 480px;
 		margin: auto;
 		background-color: white;
 		border: thick solid #4682B4;
@@ -270,4 +270,5 @@
 	}
 	div#about h2, div#about h3 {
 		color: #4682B4;
+		font-weight: bold;
 	}

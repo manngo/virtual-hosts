@@ -1,0 +1,69 @@
+/*	Source Code Pro
+	================================================
+
+	100	Thin
+	200	Extra Light (Ultra Light)
+	300	Light
+	400	Normal
+	500	Medium
+	600	Semi Bold (Demi Bold)
+	700	Bold
+	800	Extra Bold (Ultra Bold)
+	900	Black (Heavy)
+
+	http://www.w3.org/TR/css-fonts-3/#font-weight-prop
+
+	================================================ */
+
+	/*	Regular = 400
+		============================================ */
+
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Black.woff') format('woff');
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Bold.woff') format('woff');
+  font-style:   normal;
+  font-weight:  700;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-ExtraLight.woff') format('woff');
+  font-style:   normal;
+  font-weight:  200;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Light.woff') format('woff');
+  font-style:   normal;
+  font-weight:  200;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Medium.woff') format('woff');
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Regular.woff') format('woff');
+  font-style:   normal;
+  font-weight:  400;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src:	url('SourceCodePro-Semibold.woff') format('woff');
+  font-style:   normal;
+  font-weight:  700;
+}

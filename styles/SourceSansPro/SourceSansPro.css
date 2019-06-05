@@ -1,0 +1,122 @@
+/*	Source Sans Pro
+	================================================
+
+	100	Thin
+	200	Extra Light (Ultra Light)
+	300	Light
+	400	Normal
+	500	Medium
+	600	Semi Bold (Demi Bold)
+	700	Bold
+	800	Extra Bold (Ultra Bold)
+	900	Black (Heavy)
+
+	http://www.w3.org/TR/css-fonts-3/#font-weight-prop
+
+	================================================ */
+
+	/*	Regular = 400
+		============================================ */
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-Regular.woff') format('woff');
+			font-weight:  normal;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-Italic.woff') format('woff');
+			font-style:   italic;
+			font-weight:  normal;
+		}
+
+	/*	Bold = 700
+		============================================ */
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-Bold.woff') format('woff');
+			font-weight:  bold;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-BoldItalic.woff') format('woff');
+		  font-weight:  bold;
+		  font-style:   Italic;
+		}
+
+	/*	Extra Light = 200
+		============================================ */
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-ExtraLight.woff') format('woff');
+			font-weight:  200;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-ExtraLightItalic.woff') format('woff');
+			font-weight:  200;
+			font-style:   italic;
+		}
+
+	/*	Light = 300
+		============================================ */
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-Light.woff') format('woff');
+			font-weight:  300;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-LightItalic.woff') format('woff');
+			font-weight:  300;
+			font-style:   italic;
+		}
+
+	/*	Normal = 400 (Above)
+		============================================ */
+
+	/*	Semibold = 600
+		============================================ */
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-Semibold.woff') format('woff');
+			font-weight:  600;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-SemiboldItalic.woff') format('woff');
+			font-weight:  600;
+			font-style:   italic;
+		}
+
+	/*	Bold = 700 (Above)
+		============================================ */
+
+	/*	Black = 900
+		============================================ */
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:	url('SourceSansPro-Black.woff') format('woff');
+			font-weight:  900;
+			font-style:   normal;
+		}
+
+		@font-face {
+			font-family: 'Source Sans Pro';
+			src:		url('SourceSansPro-BlackItalic.woff') format('woff');
+			font-weight:  900;
+			font-style:   italic;
+		}

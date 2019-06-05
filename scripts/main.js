@@ -16,7 +16,7 @@
 
 //	Environment
 
-	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, platform, test, searchForm, about, showAbout,
+	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, platform, test, searchForm, about, doShowAbout,
 		searchData={string: '', fromIndex: 0};
 	var os=process.platform;
 
@@ -90,7 +90,7 @@
 
 		about=document.querySelector('div#about');
 		jx.draggable(about);
-		showAbout=jx.popup(about,null,{escape: true});
+		doShowAbout=jx.popup(about,null,{escape: true});
 
 		function select(button,event) {
 			event.preventDefault();
@@ -140,6 +140,18 @@
 		window.webContents.openDevTools();
 	}
 	else buttons[0].click();
+
+
+	function doAbout(file) {
+		fs.readFile(`content/${file}.html`, (err, data) => {
+console.log('doAbout')
+			about.innerHTML=data.toString();
+console.log(about.innerHTML)
+			doShowAbout();
+console.log(doShowAbout)
+		});
+	}
+
 
 //	doLineNumbers
 
@@ -247,8 +259,8 @@ if(DEVELOPMENT) console.log('save');
 		if(os=='win32') data=data.split(/\r?\n/).join('\r\n');
 		temp.open(tabs[tab].prefix,function(err,info) {
 			switch(os) {
-				case 'darwin':	command=`cp -f ${info.path} ${tabs[tab].path}`; break;
-				case 'win32':	command=`cmd.exe /c copy /y ${info.path} ${tabs[tab].path}`; break;
+				case 'darwin':	command=`cp -f "${info.path}" "${tabs[tab].path}"`; break;
+				case 'win32':	command=`cmd.exe /c copy /y "${info.path}" "${tabs[tab].path}"`; break;
 			}
 			fs.writeFile(info.fd,data,function(err) {
 				sudo.exec(command,{name: tabs[tab].save},function(error,stdout,stderr) {
@@ -313,5 +325,5 @@ if(DEVELOPMENT) console.log('save');
 		findAgain();
 	});
 	ipcRenderer.on('ABOUT',(event,data)=>{
-		showAbout();
+		doAbout('about');
 	});

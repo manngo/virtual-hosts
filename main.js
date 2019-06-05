@@ -6,7 +6,7 @@
 	console.log(require.resolve('electron'))
 	const path = require('path');
 	const { ipcRenderer } = require('electron');
-//	require('electron-reload')(__dirname);
+	require('electron-reload')(__dirname);
 
 let window;
 //console.log({app, BrowserWindow, Menu})
@@ -54,6 +54,10 @@ function init() {
 				    accelerator: 'CmdOrCtrl+Z',
 				    click: function (menuItem, focusedWindow) { focusedWindow.webContents.undo(); }
 				},
+				{
+					role: 'redo',
+					accelerator: 'CmdOrCtrl+Shift+Z',
+				},
 				{type:'separator'},
 				{
 					label: 'Cut',
@@ -97,14 +101,14 @@ function init() {
 				},
 				{
 					label: 'Edit Hosts Home',
-//					icon: 'images/external.png',
+					icon: path.join(__dirname, 'images/external.png'),
 					click: () => {
 						shell.openExternal('https://github.com/manngo/edit-hosts');
 					}
 				},
 				{
 					label: 'Internotes Virtual Hosts',
-//					icon: 'images/external.png',
+					icon: path.join(__dirname,'images/external.png'),
 					click: () => {
 						shell.openExternal('https://www.internotes.site/virtual-hosts');
 					}
