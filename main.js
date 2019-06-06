@@ -1,23 +1,27 @@
  'use strict';
 
+	const {DEVELOPMENT}=require('./settings.js');
+	if(DEVELOPMENT)	require('electron-reload')(__dirname);
+
 //	Modules to control application life and create native browser window
-	const stuff = require('electron');
-	const {app, BrowserWindow, Menu, MenuItem, shell} = require('electron');
-	console.log(require.resolve('electron'))
+	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer} = require('electron');
+//	console.log(require.resolve('electron'))
 	const path = require('path');
-	const { ipcRenderer } = require('electron');
-	require('electron-reload')(__dirname);
 
 let window;
-//console.log({app, BrowserWindow, Menu})
+
 function init() {
 	window = new BrowserWindow({
-		width: 1400,
-		height: 600,
+		width: 1200,
+		height: 800,
 		webPreferences: {
 			nodeIntegration: true
 		}
 	});
+	window.once('ready-to-show', () => {
+		window.show();
+	});
+
 	window.setTitle('Edit hosts File');
 	var menu=[
         {
@@ -115,13 +119,10 @@ function init() {
 				},
 			]
 		}
-
     ];
-	menu=Menu.buildFromTemplate(menu);
 
 	var developmentMenu=[{
 		label: 'Development',
-//		before: 'Help',
 		submenu: [
 			{
 				label: 'Show Development Tools',
@@ -134,16 +135,16 @@ function init() {
 		]
 	}];
 
-//	menuTemplate.push(developmentMenu);
-
-	developmentMenu=Menu.buildFromTemplate(developmentMenu);
+	menu=menu.concat(developmentMenu);
+	menu=Menu.buildFromTemplate(menu);
 
 	Menu.setApplicationMenu(menu);
 
-//	window.loadFile('index.html');
 	window.loadURL(path.join('file://', __dirname, '/index.html'));
+//	if(DEVELOPMENT) window.webContents.openDevTools({mode: 'detach'});
+	if(DEVELOPMENT) window.webContents.openDevTools();
+
 //	window.webContents.setDevToolsWebContents(devtools.webContents);
-//	window.webContents.openDevTools();
 
 	window.on('closed', function () {
 		window = null;

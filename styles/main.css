@@ -111,6 +111,33 @@
 		border-bottom: thin solid #f8f8f8;
 	}
 
+	form#controls>div#misc>select {
+		background-color: #ddd;
+		font-size: .9rem;
+		-webkit-appearance: none;
+		appearance: none;
+		border: thin solid #999;
+		padding: .125rem .25rem;
+		border-radius: 0;
+		outline: none;
+		width: 8em;
+		color: #333;
+		text-shadow: 0 1px 0 white;
+qheight: 100%;
+
+
+				font-family: var(--sans-serif);
+				text-shadow: 0 1px 0 white;
+				font-size: .9rem;
+
+	}
+	form#qcontrols>div#misc>select:before {
+		content: "*";
+	}
+	form#qcontrols>div#misc>select>option:before {
+		content: "qqqq";
+	}
+
 /*	Footer
 	================================================ */
 

@@ -1,15 +1,21 @@
 //	Development
-	const DEVELOPMENT=true;
-
+//	const DEVELOPMENT=false;
+	const {DEVELOPMENT}=require('../settings.js');
 // document.addEventListener('DOMContentLoaded',main,false);
 
 //	Requires
 	const path = require('path');
 	const fs = require('fs');
-	const { ipcRenderer} = require('electron');
+	const { ipcRenderer, shell} = require('electron');
 	const { dialog } = require('electron').remote;
 	const sudo = require('sudo-prompt');
+
 	const window=require('electron').remote.getCurrentWindow();
+	window.webContents.on('new-window', function(event, url) {
+	  event.preventDefault();
+	  shell.openExternal(url);
+	});
+
 	const temp=require('temp').track();
 
 	const {jx,DOM}=require('../scripts/utilities.js');
@@ -64,6 +70,27 @@
 		tab=0;
 		forms=document.querySelectorAll('div#forms>form');
 		controls=document.querySelector('form#controls');
+/*
+controls.elements['platform'].addEventListener('blur',resize,false);
+
+function resize(event) {
+	console.log(3)
+	console.log(this.innerHTML);
+}
+*/
+
+
+controls.elements['platform'].onfocus=function(event) {
+	this.setAttribute('size',this.options.length);
+};
+controls.elements['platform'].onchange=function(event) {
+	this.blur();
+};
+controls.elements['platform'].onblur=function(event) {
+	this.removeAttribute('size',this.options.length);
+};
+
+
 		buttons=document.querySelectorAll('form#controls>div#tabs>button');
 		buttons.forEach(button=>button.onclick=select.bind(button,button));
 		footer=document.querySelector('footer');
@@ -141,17 +168,12 @@
 	}
 	else buttons[0].click();
 
-
 	function doAbout(file) {
 		fs.readFile(`content/${file}.html`, (err, data) => {
-console.log('doAbout')
 			about.innerHTML=data.toString();
-console.log(about.innerHTML)
 			doShowAbout();
-console.log(doShowAbout)
 		});
 	}
-
 
 //	doLineNumbers
 
