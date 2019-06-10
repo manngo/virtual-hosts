@@ -24,10 +24,11 @@
 				<button id="show-httpd-conf" value="1">httpd.conf</button>
 				<button id="show-virtual-hosts" value="2">Virtual Hosts</button>
 				<button id="show-generator" value="3">Generator</button>
+				<button id="show-misc-text" value="4">Miscellaneous</button>
 			</div>
 			<div id="misc">
-				<select name="platform" size="1">
-					<option value="">Platform …</option>
+				<select name="server" size="1">
+					<option value="">Server …</option>
 					<option value="xampp">XAMPP</option>
 					<option value="mamp">MAMP</option>
 				</select>
@@ -35,20 +36,59 @@
 		</form>
 		<div id="forms">
 			<form id="hosts-file">
-				<textarea name="content">Open hosts file or Select Platform</textarea>
+				<div class="help">
+					<h3>Hosts File (etc/host)</h3>
+					<p>Add:</p>
+					<pre>127.0.0.1	www.example.com</pre>
+					<p>or something like it to the bottom of the file</p>
+				</div>
+				<div class="textarea etc">
+					<textarea name="content">Open hosts file or Select Platform</textarea>
+				</div>
 			</form>
 			<form id="httpd-conf">
-				<textarea name="content">Open httpd.conf file or Select Platform</textarea>
+				<div class="help">
+					<h3>Apache Configuration File (httpd.conf)</h3>
+					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+					<p>Find <code># Virtual hosts</code> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code>. This gives:</p>
+					<pre># Virtual hosts
+Include etc/extra/httpd-vhosts.conf</pre>
+				</div>
+				<div class="textarea etc">
+					<textarea name="content">Open httpd.conf file or Select Platform</textarea>
+				</div>
 			</form>
 			<form id="virtual-hosts">
-				<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
+				<div class="help">
+					<h3>Virtual Hosts File (httpd-vhosts.conf)</h3>
+					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+					<p>First, use the <strong>Generator</strong> tab and fill in the details.</p>
+					<p>Then copy the result and paste it below.</p>
+				</div>
+				<div class="textarea etc">
+					<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
+				</div>
 			</form>
 			<form id="generator">
-				<div><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></div>
-				<div><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></div>
-				<div><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></div>
-				<button name="generate">Generate</button>
-				<div id="generated"><textarea name="content">The cat sat on the mat</textarea></div>
+				<div class="help">
+					<h3>Hosts Generator</h3>
+					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+				</div>
+				<div class="etc">
+					<div><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></div>
+					<div><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></div>
+					<div><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></div>
+					<button name="generate">Generate</button>
+				</div>
+				<div class="textarea"><textarea name="content" class="textarea">The cat sat on the mat</textarea></div>
+			</form>
+			<form id="misc-text">
+				<div class="help">
+					<h3>Miscellaeous Text File</h3>
+				</div>
+				<div class="textarea etc">
+					<textarea name="content">Open any file</textarea>
+				</div>
 			</form>
 		</div>
 		<form id="search"><input type="text" name="text"><button name="find">Find</button></form>

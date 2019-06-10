@@ -5,6 +5,7 @@
 		--serif: "Source Serif Pro", serif;
 		--sans-serif: "Source Sans Pro", sans-serif;
 		--monospace: "Source Code Pro", monospace;
+		--test: "Hello";
 	}
 	html, body {
 		font-family: var(--sans-serif);
@@ -15,6 +16,10 @@
 		width: 100vw;
 		font-size: 100%;
 	}
+
+	h3 {
+		margin: 0.5rem 0;
+	}
 /*	Layout
 	================================================
 	form#controls
@@ -22,6 +27,8 @@
 		div#misc
 	div#forms
 		form#…
+			div.help
+			textarea
 		form#…
 		form#…
 	footer
@@ -49,6 +56,16 @@
 	div#forms {
 		flex: 1;
 	}
+	div#forms>form {
+		/*	display: flex; */
+		flex-direction: column;
+	}
+	div#forms>form div.textarea {
+		display: flex;
+		flex-direction: row;
+		font-family: var(--monospace);
+	}
+
 	footer {
 		qflex: 1;
 	}
@@ -171,7 +188,7 @@ qheight: 100%;
 		text-shadow: 0 1px 0 white;
 	}
 
-	footer>div#info>p#message[data-status="Edited"] {
+	footer>div#info>p#message[data-status="edited"] {
 		color: red;
 	}
 
@@ -202,12 +219,10 @@ qheight: 100%;
 
 	}
 
-
 	form textarea[name="content"],
 	div.line-numbers {
 		font-size: 1rem;
 		padding-top: 1rem;
-		font-family: var(--monospace);
 		resize: none;
 	}
 
@@ -224,6 +239,8 @@ qheight: 100%;
 		qbackground-color: #eee;
 		overflow: auto;
 		border-right: thin solid #ccc;
+		background-color: #2A5F5B;
+		color: white;
 	}
 	div.line-numbers::-webkit-scrollbar {
 	    display: none;
@@ -236,7 +253,9 @@ qheight: 100%;
 		display: text;
 		flex-direction: column;
 		font-family: var(--sans-serif);
-		padding: 1em;
+	}
+	div#forms form#generator>div.etc {
+		padding: 1rem;
 	}
 
 	form#generator label {
@@ -260,7 +279,7 @@ qheight: 100%;
 		background-color: #ddd;
 	}
 	div#generated {
-		display: flex;
+		qdisplay: flex;
 	}
 	div#forms form#generator textarea[name="content"] {
 		resize: none;
@@ -288,7 +307,7 @@ qheight: 100%;
 		width: 480px; height: 480px;
 		margin: auto;
 		background-color: white;
-		border: thick solid #4682B4;
+		border: thick solid #2A5F5B;
 		padding: 1em;
 		box-shadow: 4px 4px 4px #666;
 		overflow: auto;
@@ -296,6 +315,35 @@ qheight: 100%;
 		tab-size: 4;
 	}
 	div#about h2, div#about h3 {
-		color: #4682B4;
+		color: #2A5F5B;
 		font-weight: bold;
+	}
+	div#about a {
+		color: #2A5F5B;
+		text-decoration: none;
+		border-bottom: thin solid transparent;
+		padding-bottom: .125em;
+	}
+	div#about a:hover {
+		border-bottom: thin solid #2A5F5B;
+	}
+
+/*	div.help
+	================================================ */
+
+	div.help {
+		border-bottom: thin solid #999;
+		padding: 1rem;
+		background-color: #f8f8f8;
+		font-size: .9rem;
+	}
+
+	div.help>p {
+		margin: .25rem 0;
+	}
+	div.help code, div.help pre {
+		font-family: var(--monospace);
+	}
+	div.help pre {
+		margin: .25rem 1.5rem;
 	}

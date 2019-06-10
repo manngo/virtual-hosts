@@ -4,7 +4,8 @@
 	const { dialog } = require('electron').remote;
 
 	var editHosts=require('./edit-hosts.js');
-	var {os,hosts,platforms,setLineNumbers,platform,test}=editHosts;
+	var {os,hosts,servers,setLineNumbers,platform,test,server}=editHosts;
+
 	doVirtualHosts();
 	function doVirtualHosts() {
 		var form=document.querySelector('form#generator');
@@ -27,10 +28,10 @@
 
 		function doit(event) {
 			event.preventDefault();
-			if(!editHosts.platform) return;
-			var vhost=platforms[editHosts.platform].vhost;
+			if(!editHosts.server) return;
+			var vhost=servers[editHosts.server].vhost;
 			vhost=vhost.sprintf({
-				htdocs: platforms[editHosts.platform][os].htdocs,
+				htdocs: servers[editHosts.server].htdocs,
 				project: form.elements.project.value,
 				domain: form.elements.domain.value,
 				root: form.elements.root.value,

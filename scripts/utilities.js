@@ -364,6 +364,24 @@
 	};
 
 
+	if(!String.prototype.jschars)
+	String.prototype.jschars=function() {
+		return this.trim().replace(/\r?\n|\t/g,function(value) {
+			switch(value) {
+				case '\r\n':
+				case '\n':
+					return '\\n';
+				case '\t':
+					return '\\t';
+			}
+		});
+	};
+
+	if(!String.prototype.normaliseBR)
+	String.prototype.normaliseBR=function(br) {
+		if(!br) br='\n';
+		return this.replace(/\r?\n/g,br);
+	};
 
 /*	DOM
 	================================================

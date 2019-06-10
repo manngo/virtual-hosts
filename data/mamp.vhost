@@ -1,0 +1,20 @@
+#	!! Do Not Repeat !!
+	NameVirtualHost *:80
+
+#	MAMP	[project]: [domain]
+
+	<VirtualHost *:80>
+		ServerName [domain]
+		ServerAlias [domain]
+		DocumentRoot "[root]"
+		ServerAdmin webmaster@www.example.com
+		ErrorLog "logs/[project].log"
+		CustomLog "logs/[project].log" common
+		<directory "[root]">
+			Options Indexes FollowSymLinks
+			AllowOverride all
+			Order Deny,Allow
+			Deny from all
+			Allow from 127.0.0.1
+		</directory>
+	</VirtualHost>

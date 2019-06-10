@@ -1,0 +1,36 @@
+/*	About
+	================================================ */
+
+	html {
+		--serif: "Source Serif Pro", serif;
+		--sans-serif: "Source Sans Pro", sans-serif;
+		--monospace: "Source Code Pro", monospace;
+		--test: "Hello";
+	}
+	html, body {
+		font-family: var(--sans-serif);
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
+		height: 100vh;
+		width: 100vw;
+		font-size: 100%;
+	}
+
+	h3 {
+		margin: 0.5rem 0;
+	}
+
+	h2, h3 {
+		color: #2A5F5B;
+		font-weight: bold;
+	}
+	a {
+		color: #2A5F5B;
+		text-decoration: none;
+		border-bottom: thin solid transparent;
+		padding-bottom: .125em;
+	}
+	a:hover {
+		border-bottom: thin solid #2A5F5B;
+	}

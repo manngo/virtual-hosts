@@ -1,0 +1,72 @@
+<h2>Instructions</h2>
+	<p>This application will help you to set up a Virtual Host</p>
+	<p>This assumes that you will be using XAMPP for your development server.
+		You can also use MAMP.</p>
+
+	<p>The main steps will be:</p>
+	<ol>
+		<li>Install XAMPP (or MAMP)</li>
+		<li>Install the Sample Project</li>
+		<li>Add the Domain Name</li>
+		<li>Enable Virtual Hosts</li>
+		<li>Define the Virtual Host</li>
+		<li>After that, you can initialize the project and get started.</li>
+	</ol>
+
+<h2>Install XAMPP</h2>
+	<p>XAMPP is a server package which includes:</p>
+	<ul>
+		<li>Apache Web Server</li>
+		<li>PHP</li>
+		<li>MariaDB/MySQL</li>
+	</ul>
+
+	<p>To install XAMPP:</p>
+	<ol>
+		<li>Download from <a href="https://www.apachefriends.org/index.html">https://www.apachefriends.org/index.html</a>
+			and select <a href="https://www.apachefriends.org/download.html">Click here for other versions</a>.<br>
+			<ul>
+				<li>Download the highest version number.</li>
+				<li>If you install the Macintosh version of XAMPP, we recommend the Installer version,
+			not the VM version.</li>
+			</ul>
+		</li>
+		<li>Install XAMPP in the usual manner.</li>
+		<li>Select the Configure Button, and use Port 80. That’s not absolutely necessary, as long as you remember which port you are using. However, Port 80 is the normal one for web servers.</li>
+	</ol>
+
+<h2>Add the Domain Name</h2>
+	<p>For development purposes, we can use the domain name australia.example.com.
+		Using Edit Hosts File, select the Hosts File tab and add:</p>
+	<pre>127.0.0.1	www.example.com</pre>
+
+	<p>Save the file, giving administrative permission if asked.</p>
+
+
+<h2>Enable Virtual Hosts</h2>
+	<p>This is not enabled by default. Using Edit Hosts File, select the httpd.conf tab.</p>
+
+	<ol>
+		<li>Find the line containing Include etc/extra/httpd-vhosts.conf</li>
+		<li>Remove the hash (<code>#</code>) from the beginning to enable it.</li>
+	</ol>
+
+	<p>Of course, it may already have been enabled.</p>
+
+<h2>Define the Virtual Host</h2>
+	<p>First we will need to generate the Virtual Host code:</p>
+
+
+<ol>
+	<li>Select the Generator tab</li>
+	<li>Select XAMP from the drop down menu</li>
+	<li>Add the following details:
+		<ul>
+			<li><strong>Project Name:</strong> <code>…</code></li>
+			<li><strong>Virtual Domain:</strong> <code>….example.com</code></li>
+			<li><strong>Document Root:</strong> (Select Folder …)</li>
+		</ul>
+	</li>
+	<li>Generate and copy the result.</li>
+	<li>Select the Virtual Hosts tab and paste the result after the rest.</li>
+</ol>
