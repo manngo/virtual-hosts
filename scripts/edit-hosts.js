@@ -211,7 +211,8 @@ console.log(204)
 
 		popup.on('close',()=>{popup=undefined;});
 */
-		fs.readFile(`content/${file}.html`, (err, data) => {
+
+		fs.readFile(path.join(app.getAppPath(),`content/${file}.html`), (err, data) => {
 			about.innerHTML=data.toString();
 			doShowAbout();
 		});
