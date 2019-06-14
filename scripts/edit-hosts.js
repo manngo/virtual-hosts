@@ -11,9 +11,14 @@
 	const sudo = require('sudo-prompt');
 //	const BrowserWindow = require('browser-window');
 
-	const remote=require('electron').remote;
+	const electron=require('electron');
+
+	const remote=electron.remote;
 	const app=remote.app;
 	const BrowserWindow = remote.BrowserWindow;
+
+
+
 
 	const window=remote.getCurrentWindow();
 	window.webContents.on('new-window', function(event, url) {
@@ -41,11 +46,13 @@
 				conf: '/Applications/XAMPP/etc/httpd.conf',
 				vhosts: '/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf',
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
+				mysql:	'/Applications/XAMPP/xamppfiles/var/mysql',
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
 				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'C:/XAMPP/htdocs/',
+				htdocs:	'C:/xampp/htdocs/',
+				mysql:	'C:/xampp/mysql/data',
 			},
 			vhost: ''
 		},
@@ -54,14 +61,32 @@
 				conf: '/Applications/MAMP/conf/apache/httpd.conf',
 				vhosts: '/Applications/MAMP/conf/apache/extra/httpd-vhosts.conf',
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
+				mysql:	'/Applications/MAMP/db/mysql57',
 			},
 			win32: {
 				conf: 'C:/MAMP/conf/apache/httpd.conf',
 				vhosts: 'C:/MAMP/bin/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'C:/XAMPP/htdocs/',
+				htdocs:	'C:/MAMP/htdocs/',
+				mysql:	'C:/MAMP/db/mysql',
 			},
 			vhost: '',
-		}
+		},
+		ampps:	{
+			darwin: {
+				conf: '/Applications/AMPPS/apache/conf/httpd.conf',	//	Actual
+//				conf: '/Applications/AMPPS/conf/httpd.conf',		//	Source
+				vhosts: '/Applications/AMPPS/apache/conf/extra/httpd-vhosts.conf',
+				htdocs:	'/Applications/AMPPS/apache/htdocs',
+				mysql:	'/Applications/AMPPS/var/',
+			},
+			win32: {
+				conf: 'C:/xampp/apache/conf/httpd.conf',
+				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
+				htdocs:	'C:/XAMPP/htdocs/',
+				mysql:	'C:/Program Files (x86)/Ampps/mysql/data',
+			},
+			vhost: ''
+		},
 	};
 
 	servers.xampp.vhost=fs.readFileSync(path.join(__dirname, '../data/xampp.vhost')).toString().normaliseBR(os.EOL);
@@ -97,6 +122,9 @@
 					load(1);
 					tabs[2].path=servers[server][platform]['vhosts'];
 					load(2);
+
+					document.querySelectorAll('label.server').forEach(element=>{element.style.display='none';});
+					document.querySelectorAll(`label.${server}`).forEach(element=>{element.style.display='block';});
 				}
 				module.exports.server=server;
 			});
@@ -113,6 +141,7 @@
 				forms[tab].classList.add('selected');
 				buttons.forEach(b=>b.classList.remove('selected'));
 				button.classList.add('selected');
+				if(tabs[tab].path!==undefined)
 				footerPath.innerHTML=tabs[tab].path;
 				message(tab);
 			}
@@ -122,33 +151,56 @@
 				{title: 'httpd.conf', path: '', prefix: 'httpd', save: 'Save httpd conf', message: 'Open httpd.conf file or Select Server', status: ''},
 				{title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
 				{title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
-				{title: 'Miscellaneous', path: '', message: 'Open Any File', status: ''}
+				{title: 'Miscellaneous File', path: '', message: 'Open Any File', status: ''},
+				{title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
 			];
 
 		//	Forms
 
 			forms.forEach((f,i)=>{
-				tabs[i].content=f.elements['content'];
-				f.elements['content'].onkeydown=handleTab;
-				f.elements['content'].addEventListener('input',function(event) {
-					message(tab,'Edited','edited');
-				});
-				f.elements['content'].addEventListener('blur',function(event) {
-					searchData.fromIndex=this.selectionStart;
-				});
+				if(f.elements['content']){
+					tabs[i].content=f.elements['content'];
+					f.elements['content'].onkeydown=handleTab;
+					f.elements['content'].addEventListener('input',function(event) {
+						message(tab,'Edited','edited');
+					});
+					f.elements['content'].addEventListener('blur',function(event) {
+						searchData.fromIndex=this.selectionStart;
+					});
 
-				var lineNumbers=document.createElement('div');
-				lineNumbers.classList.add('line-numbers');
-				tabs[i].lineNumbers=lineNumbers;
-				tabs[i].content.insertAdjacentElement('beforebegin',lineNumbers);
-				tabs[i].content.onscroll=function(event) {
-					tabs[i].lineNumbers.scrollTop=this.scrollTop;
-				};
-				tabs[i].content.addEventListener('input',function(event) {
+					var lineNumbers=document.createElement('div');
+					lineNumbers.classList.add('line-numbers');
+					tabs[i].lineNumbers=lineNumbers;
+					tabs[i].content.insertAdjacentElement('beforebegin',lineNumbers);
+					tabs[i].content.onscroll=function(event) {
+						tabs[i].lineNumbers.scrollTop=this.scrollTop;
+					};
+					tabs[i].content.addEventListener('input',function(event) {
+						setLineNumbers(i);
+					});
 					setLineNumbers(i);
-				});
-				setLineNumbers(i);
+				}
 			});
+
+		//	Special Actions
+			var miscActions=document.querySelector('form#misc-actions');
+			miscActions.elements['reset-mysql'].onclick=function(event) {
+				if(!servers[server]) return;
+				var files=['ib_logfile0','ib_logfile1','mysql-bin.index'];
+				files.forEach(file=>{
+					var filepath=`${servers[server][platform].mysql}/${file}`;
+					if(fs.existsSync(filepath));
+						fs.unlink(filepath, (error) => {
+					        if (error) {
+								console.log(`${filepath} not found`);
+					            return;
+					        }
+					        console.log(`${filepath} deleted`);
+					    });
+
+
+				});
+			};
 
 		//	Footer
 
@@ -174,7 +226,7 @@
 		message(2);
 
 	if(DEVELOPMENT) {
-		buttons[4].click();
+		buttons[5].click();
 		controls.elements['server'].value='xampp';
 		controls.elements['server'].dispatchEvent(new Event('change'));
 		window.webContents.openDevTools();
@@ -227,6 +279,7 @@ console.log(204)
 			footerPath.innerHTML=tabs[t].path;
 			footerMessage.innerHTML=tabs[tab].message;
 			footerMessage.setAttribute('data-status',tabs[tab].status);
+			buttons[tab].setAttribute('data-status',tabs[tab].status);
 		}
 	}
 
@@ -242,7 +295,9 @@ console.log(204)
 			var start=this.selectionStart;
 			this.value=this.value.substring(0,start)+'\t'+this.value.substring(this.selectionEnd);
 			this.setSelectionRange(start+1,start+1);
-			return false;
+			message(tab,'Edited','edited');
+			event.preventDefault();
+			return true;
 		}
 		else return true;
 	}
@@ -339,7 +394,8 @@ console.log(204)
 		searchForm.style.display='none';
 	}
 
-	function search() {	if(DEVELOPMENT) console.log(`finding ${searchData.string} …`);
+	function search() {
+		if(DEVELOPMENT) console.log(`finding ${searchData.string} …`);
 		searchData.fromIndex=jx.findInTextarea(searchData.string,forms[tab].elements['content'],searchData.fromIndex)+1;
 	}
 
@@ -365,7 +421,19 @@ console.log(204)
 
 //	IPC
 
-	ipcRenderer.on('DOIT',(event,data)=>{
+	ipcRenderer.on('DOIT',(event,action,data)=>{
+		switch(action) {
+			case 'find':
+				searchData={
+					string: data,
+					fromIndex: 1
+				};
+				search();
+				break;
+		}
+	});
+
+	ipcRenderer.on('MENU',(event,data)=>{
 		switch(data) {
 			case 'NEW':
 
@@ -386,7 +454,7 @@ console.log(204)
 			case 'FIND':
 				find();
 				break;
-			case 'FINDAS':
+			case 'FINDAGAIN':
 				findAgain();
 				break;
 			case 'ABOUT':

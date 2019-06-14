@@ -24,13 +24,15 @@
 				<button id="show-httpd-conf" value="1">httpd.conf</button>
 				<button id="show-virtual-hosts" value="2">Virtual Hosts</button>
 				<button id="show-generator" value="3">Generator</button>
-				<button id="show-misc-text" value="4">Miscellaneous</button>
+				<button id="show-misc-text" value="4">File</button>
+				<button id="show-misc-actions" value="5">Actions</button>
 			</div>
 			<div id="misc">
 				<select name="server" size="1">
 					<option value="">Server …</option>
 					<option value="xampp">XAMPP</option>
 					<option value="mamp">MAMP</option>
+					<option value="ampps">AMPPS</option>
 				</select>
 			</div>
 		</form>
@@ -50,7 +52,8 @@
 				<div class="help">
 					<h3>Apache Configuration File (httpd.conf)</h3>
 					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
-					<p>Find <code># Virtual hosts</code> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code>. This gives:</p>
+					<p><a href="doit:find:httpd-vhosts.conf">Find</a> <code>httpd-vhosts.conf</code> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any).
+						This gives:</p>
 					<pre># Virtual hosts
 Include etc/extra/httpd-vhosts.conf</pre>
 				</div>
@@ -75,9 +78,10 @@ Include etc/extra/httpd-vhosts.conf</pre>
 					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
 				</div>
 				<div class="etc">
-					<div><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></div>
-					<div><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></div>
-					<div><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></div>
+					<p><label class="server xampp"><input type="checkbox" name="xampp-default" value="1" title="Short Project Name" checked> Include Default Host</label></p>
+					<p><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></p>
+					<p><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></p>
+					<p><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></p>
 					<button name="generate">Generate</button>
 				</div>
 				<div class="textarea"><textarea name="content" class="textarea">The cat sat on the mat</textarea></div>
@@ -88,6 +92,14 @@ Include etc/extra/httpd-vhosts.conf</pre>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open any file</textarea>
+				</div>
+			</form>
+			<form id="misc-actions">
+				<div class="help">
+					<h3>Miscellaeous Actions</h3>
+				</div>
+				<div class="etc">
+					<p><button type="button" name="reset-mysql">Reset MySQL</button></p>
 				</div>
 			</form>
 		</div>

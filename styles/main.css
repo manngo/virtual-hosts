@@ -127,6 +127,11 @@
 		background-color: #f8f8f8;
 		border-bottom: thin solid #f8f8f8;
 	}
+	form#controls>div#tabs>button[data-status="edited"] {
+		background-color: #f8f8f8;
+		qbackground-color: red;
+		border-bottom: medium solid red;
+	}
 
 	form#controls>div#misc>select {
 		background-color: #ddd;
@@ -170,7 +175,11 @@ qheight: 100%;
 	form#search {
 		display: none;
 		background-color: #f8f8f8;
-		padding: .5rem;
+		padding: .5rem .5rem;
+	}
+	form#search input[name="text"] {
+		font-size: .9rem;
+		padding: .25em .5em .5em;
 	}
 	footer>div#info {
 		padding: 0;

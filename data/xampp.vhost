@@ -9,7 +9,7 @@
 		</Directory>
 	</VirtualHost>
 
-#	[project]: [domain]
+#	XAMPP	[project]: [domain]
 	<VirtualHost *:80>
 		ServerName [domain]
 		ServerAlias [domain]

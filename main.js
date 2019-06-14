@@ -7,7 +7,7 @@
 	if(DEVELOPMENT) require('electron-reload')(__dirname);
 
 //	Required Modules
-	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer} = require('electron');
+	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer, protocol} = require('electron');
 	//	console.log(require.resolve('electron'))
 	const path = require('path');
 
@@ -18,7 +18,7 @@
 	//	click: function (menuItem, focusedWindow) { focusedWindow.webContents.undo(); }
 
 	function send(menuItem) {
-		window.webContents.send('DOIT',menuItem.id);
+		window.webContents.send('MENU',menuItem.id);
 	}
 
 	menu=[
@@ -82,6 +82,15 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 				nodeIntegration: true
 			}
 		});
+
+
+	protocol.registerStringProtocol('doit',(request,callback)=>{
+//		console.log(request);
+//		console.log(callback);
+		var [dummy,action,data]=request.url.split(/:(.+):(.+)/);
+		window.webContents.send('DOIT',action,data);
+	},(error)=> {});
+
 		window.once('ready-to-show', () => {
 			window.show();
 		});
