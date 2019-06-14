@@ -1,6 +1,6 @@
 {
 	"name": "edit-hosts",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Edit Hosts File",
 	"main": "main.js",
 	"repository": "https://github.com/manngo/edit-hosts",
