@@ -1,9 +1,9 @@
 {
-	"name": "edit-hosts",
-	"version": "0.3.0",
-	"description": "Edit Hosts File",
+	"name": "edit-virtual-hosts",
+	"version": "0.4.0",
+	"description": "Edit Virtual Hosts",
 	"main": "main.js",
-	"repository": "https://github.com/manngo/edit-hosts",
+	"repository": "https://github.com/manngo/edit-virtual-hosts",
 	"keywords": [],
 	"author": "Mark Simon",
 	"license": "CC0-1.0",
@@ -13,11 +13,10 @@
 	},
 	"dependencies": {
 		"electron-reload": "^1.4.0",
-		"electron-search-text": "^0.3.0",
 		"sudo-prompt": "^9.0.0",
 		"temp": "^0.9.0"
 	},
-	"productName": "Edit Hosts File",
+	"productName": "Edit Virtual Hosts",
 	"scripts": {
 		"start": "electron .",
 		"pack": "electron-builder --dir",

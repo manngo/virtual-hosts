@@ -1,3 +1,14 @@
+PHP Executable
+
+XAMPP
+	C:/xampp/php/php.exe
+MAMP: See httpd.conf/LoadFile "C:/MAMP/bin/php/.../libssh2.dll"
+	C:/MAMP/bin/php/php7.2.10/php.exe
+AMPPS
+	
+
+
+
 XAMPP
 
 	mac

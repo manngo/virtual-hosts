@@ -3,7 +3,7 @@
 //	document.addEventListener('DOMContentLoaded',doVirtualHosts,false);
 	const { dialog } = require('electron').remote;
 
-	var editHosts=require('./edit-hosts.js');
+	var editHosts=require('./edit-virtual-hosts.js');
 	var {os,hosts,servers,setLineNumbers,platform,test,server}=editHosts;
 
 	doVirtualHosts();

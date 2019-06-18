@@ -23,7 +23,7 @@
 
 	menu=[
         {
-            label: 'Edit hosts File',
+            label: 'Edit Virtual Hosts',
             submenu: [
                 {	label: `New Document`, accelerator: 'CmdOrCtrl+N', id:'NEW', click: send },
                 {	label: `Open …`, accelerator: 'CmdOrCtrl+O', id:'OPEN', click: send },
@@ -55,7 +55,7 @@
 				{	label: 'About …', id: 'ABOUT', click: send },
 				{	label: 'Instructions …', id: 'INSTRUCTIONS', click: send },
 				{	type:'separator' },
-				{	label: 'Edit Hosts Home', icon: path.join(__dirname, 'images/external.png'), click: () => { shell.openExternal('https://github.com/manngo/edit-hosts'); } },
+				{	label: 'Edit Virtual Hosts Home', icon: path.join(__dirname, 'images/external.png'), click: () => { shell.openExternal('https://github.com/manngo/edit-virtual-hosts'); } },
 				{	label: 'Internotes Virtual Hosts', icon: path.join(__dirname,'images/external.png'), click: () => { shell.openExternal('https://www.internotes.net/virtual-hosts'); }
 				},
 			]
@@ -95,7 +95,7 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 			window.show();
 		});
 
-		window.setTitle('Edit hosts File');
+		window.setTitle('Edit Virtual Hosts');
 		menu=Menu.buildFromTemplate(menu);
 
 		Menu.setApplicationMenu(menu);

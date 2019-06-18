@@ -1,33 +1,33 @@
-Arguments: 
+Arguments:
   /usr/local/bin/node /usr/local/Cellar/yarn/1.16.0/libexec/bin/yarn.js dist
 
-PATH: 
+PATH:
   /Library/Frameworks/Python.framework/Versions/3.7/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/opt/X11/bin:/Applications/Server.app/Contents/ServerRoot/usr/bin:/Applications/Server.app/Contents/ServerRoot/usr/sbin
 
-Yarn version: 
+Yarn version:
   1.16.0
 
-Node version: 
+Node version:
   10.15.3
 
-Platform: 
+Platform:
   darwin x64
 
-Trace: 
-  SyntaxError: /Users/mark/GitHub/edit-hosts/package.json: Unexpected token } in JSON at position 501
+Trace:
+  SyntaxError: /Users/mark/GitHub/edit-virtual-hosts/package.json: Unexpected token } in JSON at position 501
       at JSON.parse (<anonymous>)
       at /usr/local/Cellar/yarn/1.16.0/libexec/lib/cli.js:1625:59
       at Generator.next (<anonymous>)
       at step (/usr/local/Cellar/yarn/1.16.0/libexec/lib/cli.js:304:30)
       at /usr/local/Cellar/yarn/1.16.0/libexec/lib/cli.js:315:13
 
-npm manifest: 
+npm manifest:
   {
-  	"name": "edit-hosts",
+  	"name": "edit-virtual-hosts",
   	"version": "1.0.0",
-  	"description": "Edit Hosts File",
+  	"description": "Edit Virtual Hosts",
   	"main": "main.js",
-  	"repository": "https://github.com/manngo/edit-hosts",
+  	"repository": "https://github.com/manngo/edit-virtual-hosts",
   	"keywords": [],
   	"author": "Mark Simon",
   	"license": "CC0-1.0",
@@ -38,9 +38,9 @@ npm manifest:
   	"dependencies": {
   	    "sudo-prompt": "^8.1.0"
   	},
-  	"productName": "Edit Hosts File",
+  	"productName": "Edit Virtual Hosts",
   	"build": {
-  		"appId": "com.webcraft101.edit-hosts",
+  		"appId": "com.webcraft101.edit-virtual-hosts",
   		"mac": {
   			"category": "your.app.category.type"
   		},
@@ -52,8 +52,8 @@ npm manifest:
   	}
   }
 
-yarn manifest: 
+yarn manifest:
   No manifest
 
-Lockfile: 
+Lockfile:
   No lockfile
