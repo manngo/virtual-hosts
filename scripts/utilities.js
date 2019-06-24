@@ -332,10 +332,10 @@
 	jx.findInTextarea(string,textarea);
 	================================================ */
 
-	jx.findInTextarea=function(string,textarea,start) {
+	jx.findInTextarea=function(string,textarea,start,caseSensitive) {
 		if(!string || !textarea) return;
 		if(start===undefined) start=0;
-		var position=textarea.value.toLowerCase().indexOf(string.toLowerCase(),start);
+		var position = caseSensitive?textarea.value.indexOf(string,start):textarea.value.toLowerCase().indexOf(string.toLowerCase(),start);
 		// var position=textarea.value.search(new RegExp(string,'i'),start);
 		if(position>=0) {
 			textarea.selectionEnd = textarea.selectionStart = position;

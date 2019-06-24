@@ -103,7 +103,11 @@ Include etc/extra/httpd-vhosts.conf</pre>
 				</div>
 			</form>
 		</div>
-		<form id="search"><input type="text" name="text"><button name="find">Find</button></form>
+		<form id="search">
+			<input type="text" name="text">
+			<input type="checkbox" name="case-sensitive" id="search-case-sensitive"><label for="search-case-sensitive">Match Case</label>
+			<button name="find">Find</button>
+		</form>
 		<footer>
 			<div id="info"><p id="path">Path</p><p id="message" data-status="">Message</p></div>
 		</footer>

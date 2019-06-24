@@ -145,13 +145,17 @@
 		width: 8em;
 		color: #333;
 		text-shadow: 0 1px 0 white;
-qheight: 100%;
 
+		font-family: var(--sans-serif);
+		text-shadow: 0 1px 0 white;
+		font-size: .9rem;
 
-				font-family: var(--sans-serif);
-				text-shadow: 0 1px 0 white;
-				font-size: .9rem;
-
+		border: thin solid #ccc;
+		margin: .125rem;
+		background: #f8f8f8
+	}
+	form#controls>div#misc>select>option {
+		background-color: #eee;
 	}
 	form#qcontrols>div#misc>select:before {
 		content: "*";
@@ -159,6 +163,42 @@ qheight: 100%;
 	form#qcontrols>div#misc>select>option:before {
 		content: "qqqq";
 	}
+
+/*	Search
+	================================================ */
+
+	form#search {
+		display: none;
+		background-color: #f8f8f8;
+		padding: .25rem .25rem;
+		font-size: .8rem;
+	}
+	form#search input[name="text"] {
+		font-family: var(--monospace);
+		padding: .125em .5em .25em;
+		flex: 1;
+	}
+	form#search input[id="search-case-sensitive"] {
+		display: none;
+	}
+	form#search input[id="search-case-sensitive"]+label {
+		border: thin solid #ddd;
+		background: linear-gradient(to bottom, #f8f8f8, #eee);
+		box-shadow:
+			inset 1px 1px 1px white,
+			inset -1px -1px 1px #ddd
+			;
+		padding: .125em .5em .25em;
+		margin-right: 2em;
+	}
+	form#search input[id="search-case-sensitive"]:checked+label {
+		color: white;
+		border: thin solid #666;
+		background: linear-gradient(to bottom, #777, #666);
+		box-shadow:
+			inset 1px 1px 1px #666;
+	}
+
 
 /*	Footer
 	================================================ */
@@ -171,15 +211,6 @@ qheight: 100%;
 		pointer-events: none;
 		display: flex;
 		flex-direction: column;
-	}
-	form#search {
-		display: none;
-		background-color: #f8f8f8;
-		padding: .5rem .5rem;
-	}
-	form#search input[name="text"] {
-		font-size: .9rem;
-		padding: .25em .5em .5em;
 	}
 	footer>div#info {
 		padding: 0;
@@ -222,6 +253,7 @@ qheight: 100%;
 		box-sizing: border-box;
 		overflow: auto;
 		white-space: nowrap;
+		resize: none;
 	}
 	form#hosts button[name="save"] {
 
@@ -230,9 +262,11 @@ qheight: 100%;
 
 	form textarea[name="content"],
 	div.line-numbers {
-		font-size: 1rem;
-		padding-top: 1rem;
-		resize: none;
+		font-family: var(--monospace);
+		font-size: .9rem;
+		padding-top: 1em;
+		padding-bottom: 1em;
+		line-height: 1.25;
 	}
 
 

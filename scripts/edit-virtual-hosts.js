@@ -33,7 +33,7 @@
 //	Environment
 
 	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, server, test, searchForm, about, doShowAbout, popup=undefined,
-		searchData={string: '', fromIndex: 0};
+		searchData={string: '', fromIndex: 0, caseSensitive: false };
 	var platform=process.platform;
 	var os=require('os');
 	var hosts={
@@ -226,7 +226,7 @@
 		message(2);
 
 	if(DEVELOPMENT) {
-		buttons[5].click();
+		buttons[1].click();
 		controls.elements['server'].value='xampp';
 		controls.elements['server'].dispatchEvent(new Event('change'));
 		window.webContents.openDevTools();
@@ -388,20 +388,20 @@ console.log(204)
 		console.log(string);
 		searchData={
 			string,
-			fromIndex: searchForm.elements['text'].selectionStart
+			fromIndex: searchForm.elements['text'].selectionStart,
+			caseSenstive: searchForm.elements['case-sensitive'].checked
 		};
 		search();
 		searchForm.style.display='none';
 	}
 
-	function search() {
-		if(DEVELOPMENT) console.log(`finding ${searchData.string} …`);
-		searchData.fromIndex=jx.findInTextarea(searchData.string,forms[tab].elements['content'],searchData.fromIndex)+1;
+	function search() {				if(DEVELOPMENT) console.log(`finding ${searchData.string} …`);
+		searchData.fromIndex=jx.findInTextarea(searchData.string,forms[tab].elements['content'],searchData.fromIndex,searchData.caseSenstive)+1;
 	}
 
-	function find() {			if(DEVELOPMENT) console.log('find');
+	function find() {				if(DEVELOPMENT) console.log('find');
 		//	Show Search Form
-			searchForm.style.display='block';
+			searchForm.style.display='flex';
 //		searchData.fromIndex=document.activeElement.selectionStart||0;
 			searchForm.elements['text'].focus();
 			searchForm.elements['text'].select();
@@ -426,7 +426,8 @@ console.log(204)
 			case 'find':
 				searchData={
 					string: data,
-					fromIndex: 1
+					fromIndex: 1,
+					caseSensitive: false
 				};
 				search();
 				break;
