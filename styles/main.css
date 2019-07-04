@@ -169,11 +169,17 @@
 
 	form#search {
 		display: none;
+		display: flex;
 		background-color: #f8f8f8;
 		padding: .25rem .25rem;
 		font-size: .8rem;
+		width: 100%;
 	}
-	form#search input[name="text"] {
+	form#search>div {
+		flex: 1;
+		display: flex;
+	}
+	form#search input[name="text"],form#search input[name="replacement"] {
 		font-family: var(--monospace);
 		padding: .125em .5em .25em;
 		flex: 1;

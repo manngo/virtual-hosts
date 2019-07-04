@@ -20,12 +20,13 @@
 	<body>
 		<form id="controls">
 			<div id="tabs">
-				<button id="show-hosts-file" value="0">hosts File</button>
-				<button id="show-httpd-conf" value="1">httpd.conf</button>
-				<button id="show-virtual-hosts" value="2">Virtual Hosts</button>
-				<button id="show-generator" value="3">Generator</button>
-				<button id="show-misc-text" value="4">File</button>
-				<button id="show-misc-actions" value="5">Actions</button>
+				<button value="hosts-file">hosts File</button>
+				<button value="httpd-conf">httpd.conf</button>
+				<button value="virtual-hosts">Virtual Hosts</button>
+				<button value="generator">Generator</button>
+				<button value="php-ini">php.ini</button>
+				<button value="misc-text">File</button>
+				<button value="misc-actions">Actions</button>
 			</div>
 			<div id="misc">
 				<select name="server" size="1">
@@ -52,7 +53,7 @@
 				<div class="help">
 					<h3>Apache Configuration File (httpd.conf)</h3>
 					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
-					<p><a href="doit:find:httpd-vhosts.conf">Find</a> <code>httpd-vhosts.conf</code> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any).
+					<p>Find <a href="doit:find:httpd-vhosts.conf"><code>httpd-vhosts.conf</code></a> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any).
 						This gives:</p>
 					<pre># Virtual hosts
 Include etc/extra/httpd-vhosts.conf</pre>
@@ -86,6 +87,20 @@ Include etc/extra/httpd-vhosts.conf</pre>
 				</div>
 				<div class="textarea"><textarea name="content" class="textarea">The cat sat on the mat</textarea></div>
 			</form>
+			<form id="php-ini">
+				<div class="help">
+					<h3>PHP Configuration File (php.ini)</h3>
+					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+					<p>Find <a href="doit:find:sendmail_path"><code>sendmail_path</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
+						Select the part after <code>sendmail_path=</code><br>
+						Locate your (fake) <a href="doit:locate:Sendmail Path:replace">sendmail</a> program and add the path at the end inside "quotes".<br>
+						This gives something like: <code>sendmail_path = "…/…/sendmail"</code></p>
+
+				</div>
+				<div class="textarea etc">
+					<textarea name="content">Open php.ini file or Select Platform</textarea>
+				</div>
+			</form>
 			<form id="misc-text">
 				<div class="help">
 					<h3>Miscellaeous Text File</h3>
@@ -104,9 +119,11 @@ Include etc/extra/httpd-vhosts.conf</pre>
 			</form>
 		</div>
 		<form id="search">
-			<input type="text" name="text">
+			<div><input type="text" name="text"><button name="find">Find</button></div>
+<!--
+			<div><input type="text" name="replacement"><button name="replace">Replace</button></div>
+-->
 			<input type="checkbox" name="case-sensitive" id="search-case-sensitive"><label for="search-case-sensitive">Match Case</label>
-			<button name="find">Find</button>
 		</form>
 		<footer>
 			<div id="info"><p id="path">Path</p><p id="message" data-status="">Message</p></div>

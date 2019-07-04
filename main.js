@@ -87,8 +87,8 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 	protocol.registerStringProtocol('doit',(request,callback)=>{
 //		console.log(request);
 //		console.log(callback);
-		var [dummy,action,data]=request.url.split(/:(.+):(.+)/);
-		window.webContents.send('DOIT',action,data);
+		var [dummy,action,data,more]=request.url.split(/:/);
+		window.webContents.send('DOIT',action,data,more);
 	},(error)=> {});
 
 		window.once('ready-to-show', () => {

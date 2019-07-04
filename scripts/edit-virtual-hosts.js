@@ -1,11 +1,19 @@
 //	Development
-//	const DEVELOPMENT=false;
 	const {DEVELOPMENT}=require('../settings.js');
-// document.addEventListener('DOMContentLoaded',main,false);
+
+//	Generic
+
+	const iterableProperties={
+		enumerable: false,
+		value: function * () {
+			for(let key in this) if(this.hasOwnProperty(key)) yield this[key];
+		}
+	};
 
 //	Requires
 	const path = require('path');
 	const fs = require('fs');
+	const fsp = require('fs').promises;
 	const { ipcRenderer, shell} = require('electron');
 	const { dialog } = require('electron').remote;
 	const sudo = require('sudo-prompt');
@@ -16,9 +24,6 @@
 	const remote=electron.remote;
 	const app=remote.app;
 	const BrowserWindow = remote.BrowserWindow;
-
-
-
 
 	const window=remote.getCurrentWindow();
 	window.webContents.on('new-window', function(event, url) {
@@ -32,7 +37,7 @@
 
 //	Environment
 
-	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs, server, test, searchForm, about, doShowAbout, popup=undefined,
+	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs={}, server, test, searchForm, about, doShowAbout, popup=undefined,
 		searchData={string: '', fromIndex: 0, caseSensitive: false };
 	var platform=process.platform;
 	var os=require('os');
@@ -47,12 +52,14 @@
 				vhosts: '/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf',
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
 				mysql:	'/Applications/XAMPP/xamppfiles/var/mysql',
+				phpini: '/Applications/XAMPP/xamppfiles/etc/php.ini',
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
 				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'C:/xampp/htdocs/',
 				mysql:	'C:/xampp/mysql/data',
+				phpini: 'C:/xampp/php/php.ini',
 			},
 			vhost: ''
 		},
@@ -62,6 +69,7 @@
 				vhosts: '/Applications/MAMP/conf/apache/extra/httpd-vhosts.conf',
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
 				mysql:	'/Applications/MAMP/db/mysql57',
+				phpini: '/Applications/MAMP/bin/php/php{version}/conf/php.ini',
 			},
 			win32: {
 				conf: 'C:/MAMP/conf/apache/httpd.conf',
@@ -78,12 +86,14 @@
 				vhosts: '/Applications/AMPPS/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'/Applications/AMPPS/apache/htdocs',
 				mysql:	'/Applications/AMPPS/var/',
+				phpini: '/Applications/AMPPS/php/etc/php.ini',
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
 				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'C:/XAMPP/htdocs/',
 				mysql:	'C:/Program Files (x86)/Ampps/mysql/data',
+				phpini: '/Applications/AMPPS/php/etc/php.ini',
 			},
 			vhost: ''
 		},
@@ -100,7 +110,10 @@
 
 	function main() {
 		form=tab=0;
-		forms=document.querySelectorAll('div#forms>form');
+		forms={};
+		Object.defineProperty(forms,Symbol.iterator,iterableProperties);
+
+		for(let f of document.querySelectorAll('div#forms>form')) forms[f.id]=f;
 		controls=document.querySelector('form#controls');
 
 		//	Controls
@@ -118,10 +131,20 @@
 			controls.elements['server'].addEventListener('change',function(event) {
 				server=this.value;
 				if(server) {
-					tabs[1].path=servers[server][platform]['conf'];
-					load(1);
-					tabs[2].path=servers[server][platform]['vhosts'];
-					load(2);
+					tabs['httpd-conf'].path=servers[server][platform]['conf'];
+					load('httpd-conf')
+					.then(data=>{
+						var phpini=servers[server][platform]['phpini'];
+						var pattern=/php(\d\.\d+\.\d+)/;
+						var version=data.match(pattern);
+						if(version && phpini.match('{version}')) {
+							phpini=phpini.replace('{version}',version[1]);
+						}
+						tabs['php-ini'].path=phpini;
+						load('php-ini');
+					});
+					tabs['virtual-hosts'].path=servers[server][platform]['vhosts'];
+					load('virtual-hosts');
 
 					document.querySelectorAll('label.server').forEach(element=>{element.style.display='none';});
 					document.querySelectorAll(`label.${server}`).forEach(element=>{element.style.display='block';});
@@ -131,38 +154,44 @@
 
 		//	Tab Buttons
 
-			buttons=document.querySelectorAll('form#controls>div#tabs>button');
-			buttons.forEach(button=>button.onclick=select.bind(button,button));
+			buttons={};
+			Object.defineProperty(buttons,Symbol.iterator,iterableProperties);
+
+			for(let b of document.querySelectorAll('form#controls>div#tabs>button')) {
+				b.onclick=select.bind(b,b);
+				buttons[b.value]=b;
+			}
 
 			function select(button,event) {
 				event.preventDefault();
-				tab=parseInt(button.value)||0;
-				forms.forEach(f=>f.classList.remove('selected'));
+				tab=button.value;
+				for(let f of forms) f.classList.remove('selected');
 				forms[tab].classList.add('selected');
-				buttons.forEach(b=>b.classList.remove('selected'));
+				for(let button of buttons) button.classList.remove('selected');
 				button.classList.add('selected');
 				if(tabs[tab].path!==undefined)
 				footerPath.innerHTML=tabs[tab].path;
-				message(tab);
+				tabMessage(tab);
 			}
 
-			tabs=[
-				{title: 'Hosts File', path: hosts[platform], prefix: 'hosts', save: 'Save Hosts File', message: 'Opened', status: ''},
-				{title: 'httpd.conf', path: '', prefix: 'httpd', save: 'Save httpd conf', message: 'Open httpd.conf file or Select Server', status: ''},
-				{title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
-				{title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
-				{title: 'Miscellaneous File', path: '', message: 'Open Any File', status: ''},
-				{title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
-			];
+			tabs={
+				'hosts-file': {title: 'Hosts File', path: hosts[platform], prefix: 'hosts', save: 'Save Hosts File', message: 'Opened', status: ''},
+				'httpd-conf': {title: 'httpd.conf', path: '', prefix: 'httpd', save: 'Save httpd conf', message: 'Open httpd.conf file or Select Server', status: ''},
+				'virtual-hosts': {title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
+				'generator': {title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
+				'php-ini': {title: 'php.ini', path: '', prefix: 'php-ini', save: 'Save php ini file', message: 'Open php.ini file or Select Server', status: ''},
+				'misc-text': {title: 'Miscellaneous File', path: '', message: 'Open Any File', status: ''},
+				'misc-actions': {title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
+			};
 
 		//	Forms
 
-			forms.forEach((f,i)=>{
+			for(let f of forms) {
 				if(f.elements['content']){
-					tabs[i].content=f.elements['content'];
+					tabs[f.id].content=f.elements['content'];
 					f.elements['content'].onkeydown=handleTab;
 					f.elements['content'].addEventListener('input',function(event) {
-						message(tab,'Edited','edited');
+						tabMessage(tab,'Edited','edited');
 					});
 					f.elements['content'].addEventListener('blur',function(event) {
 						searchData.fromIndex=this.selectionStart;
@@ -170,17 +199,17 @@
 
 					var lineNumbers=document.createElement('div');
 					lineNumbers.classList.add('line-numbers');
-					tabs[i].lineNumbers=lineNumbers;
-					tabs[i].content.insertAdjacentElement('beforebegin',lineNumbers);
-					tabs[i].content.onscroll=function(event) {
-						tabs[i].lineNumbers.scrollTop=this.scrollTop;
+					tabs[f.id].lineNumbers=lineNumbers;
+					tabs[f.id].content.insertAdjacentElement('beforebegin',lineNumbers);
+					tabs[f.id].content.onscroll=function(event) {
+						tabs[f.id].lineNumbers.scrollTop=this.scrollTop;
 					};
-					tabs[i].content.addEventListener('input',function(event) {
-						setLineNumbers(i);
+					tabs[f.id].content.addEventListener('input',function(event) {
+						setLineNumbers(f.id);
 					});
-					setLineNumbers(i);
+					setLineNumbers(f.id);
 				}
-			});
+			}
 
 		//	Special Actions
 			var miscActions=document.querySelector('form#misc-actions');
@@ -212,6 +241,7 @@
 
 			searchForm=document.querySelector('form#search');
 			searchForm.elements['find'].onclick=newSearch;
+			//	searchForm.elements['replace'].onclick=replace;
 
 		//	About etc
 
@@ -221,25 +251,23 @@
 	}
 	//	Activate
 
-		load(0);
-		message(1);
-		message(2);
+		load('hosts-file');
+		tabMessage('httpd-conf')
+		.then(()=>tabMessage('virtual-hosts'))
+		// .then(()=>tabMessage(0,'Whatever0','Etc0'))
+		// .then(()=>tabMessage(1,'Whatever1','Etc1'))
+		// .then(()=>tabMessage(2,'Whatever2','Etc2'))
+		// .then(()=>tabMessage(3,'Whatever3','Etc3'))
+		// .then(()=>tabMessage(4,'Whatever4','Etc4'))
+		;
 
 	if(DEVELOPMENT) {
-		buttons[1].click();
+		buttons['php-ini'].click();
 		controls.elements['server'].value='xampp';
 		controls.elements['server'].dispatchEvent(new Event('change'));
 		window.webContents.openDevTools();
 	}
-	else buttons[0].click();
-
-/*
-	ipcRenderer.on('TEST',(event,data)=>{
-		console.log('TEST');
-		console.log(data);
-		console.log(188);
-	});
-*/
+	else buttons['hosts-file'].click();
 	function doAbout(file) {
 /*
 		if(!popup) popup=new BrowserWindow({
@@ -282,6 +310,19 @@ console.log(204)
 			buttons[tab].setAttribute('data-status',tabs[tab].status);
 		}
 	}
+	function tabMessage(t,value,status) {
+console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
+			if(status!==undefined) tabs[t].status=status;
+			if(value) tabs[t].message=value;
+			if(t==tab) {
+				footerPath.innerHTML=tabs[t].path;
+				footerMessage.innerHTML=tabs[tab].message;
+				footerMessage.setAttribute('data-status',tabs[tab].status);
+			}
+		return new Promise((resolve,reject)=>{
+			resolve();
+		});
+	}
 
 	function setLineNumbers(tab) {
 		var lines=tabs[tab].content.value.split(/\r?\n/).length;
@@ -295,7 +336,7 @@ console.log(204)
 			var start=this.selectionStart;
 			this.value=this.value.substring(0,start)+'\t'+this.value.substring(this.selectionEnd);
 			this.setSelectionRange(start+1,start+1);
-			message(tab,'Edited','edited');
+			tabMessage(tab,'Edited','edited');
 			event.preventDefault();
 			return true;
 		}
@@ -316,18 +357,80 @@ console.log(204)
 
 //	Load File
 
+	function readFile(path,action,callback) {
+		var test=0;
+		fsp
+		.readFile(path)
+		.then(data=>{
+			console.log('ok');
+			data=data.toString();
+			console.log(path.toString());
+			test=23;
+		})
+		.then(()=>{
+			console.log(test);
+		})
+		.then(()=>{
+			return 34;
+		})
+		.catch(error=>{
+			console.log(error);
+			return null;
+		});
+		return 57;
+	}
+
+	function testLoad(tab) {
+		return new Promise((resolve,reject)=>{
+			resolve('hello');
+		});
+	}
+
 	function load(tab) {
-		if(tabs[tab].path) fs.readFile(tabs[tab].path, (err, data) => {
+		return new Promise((resolve,reject)=>{
+			if(!tabs[tab].path) return;
+			fsp
+			.readFile(tabs[tab].path)
+			.then(data => {
+				data=data.toString();
+				forms[tab].elements['content'].value=data;
+				tabMessage(tab,'Opened','opened');
+				setLineNumbers(tab);
+				resolve(data);
+			})
+			.catch(error=>{
+				console.log(error);
+			});
+		});
+		// if(tabs[tab].path)
+		// 	fsp
+		// 	.readFile(tabs[tab].path)
+		// 	.then(data => {
+		// 		data=data.toString();
+		// 		forms[tab].elements['content'].value=data;
+		// 		tabMessage(tab,'Opened','opened');
+		// 		setLineNumbers(tab);
+		// 	})
+		// 	.catch(error=>{
+		// 		console.log(error);
+		// 	});
+		// else tabMessage(tab,'oops','');
+	}
+
+
+	function load2(tab) {
+testLoad(tab).then(data=>{console.log(data);});
+		if(tabs[tab].path) fs.readFile(tabs[tab].path, (error, data) => {
 			if(err) {
-				console.log(err);
+				console.log(error);
 				return;
 			}
 			data=data.toString();
 			forms[tab].elements['content'].value=data;
-			message(tab,'Opened','opened');
+			tabMessage(tab,'Opened','opened');
 			setLineNumbers(tab);
 		});
-		else message(tab,'oops','');
+		else tabMessage(tab,'oops','');
 	}
 
 //	Save File with Permission
@@ -344,7 +447,6 @@ console.log(204)
 		var command;
 		var data=forms[tab].elements['content'].value.trim()+'\n';
 		if(platform=='win32') data=data.split(/\r?\n/).join('\r\n');
-
 		fs.writeFile(tabs[tab].path,data,function(error) {
 			if(error) {
 				console.log(JSON.stringify(error));
@@ -355,16 +457,17 @@ console.log(204)
 							case 'win32':	command=`cmd.exe /c copy /y "${info.path}" "${tabs[tab].path}"`; break;
 						}
 						fs.writeFile(info.fd,data,function(err) {
-							sudo.exec(command,{name: tabs[tab].save},function(error,stdout,stderr) {
+							var options={name: tabs[tab].save};
+							sudo.exec(command,options,function(error,stdout,stderr) {
 								if(error) console.log(error);
 							});
 						});
 					});
-					message(tab,'Saved','saved');
+					tabMessage(tab,'Saved','saved');
 				}
 			}
 			else {
-				 message(tab,'Saved','saved');
+				 tabMessage(tab,'Saved','saved');
 			}
 		});
 	}
@@ -385,17 +488,17 @@ console.log(204)
 	function newSearch(event) {		if(DEVELOPMENT) console.log('finding …');
 		event.preventDefault();
 		var string=searchForm.elements['text'].value;
-		console.log(string);
+		console.log(`… ${string}`);
 		searchData={
 			string,
 			fromIndex: searchForm.elements['text'].selectionStart,
 			caseSenstive: searchForm.elements['case-sensitive'].checked
 		};
-		search();
+		doFind();
 		searchForm.style.display='none';
 	}
 
-	function search() {				if(DEVELOPMENT) console.log(`finding ${searchData.string} …`);
+	function doFind() {				if(DEVELOPMENT) console.log(`doFind ${searchData.string} …`);
 		searchData.fromIndex=jx.findInTextarea(searchData.string,forms[tab].elements['content'],searchData.fromIndex,searchData.caseSenstive)+1;
 	}
 
@@ -416,12 +519,16 @@ console.log(204)
 	}
 
 	function findAgain() {
-		search();
+		doFind();
+	}
+
+	function replace() {
+
 	}
 
 //	IPC
 
-	ipcRenderer.on('DOIT',(event,action,data)=>{
+	ipcRenderer.on('DOIT',(event,action,data,more)=>{
 		switch(action) {
 			case 'find':
 				searchData={
@@ -429,7 +536,36 @@ console.log(204)
 					fromIndex: 1,
 					caseSensitive: false
 				};
-				search();
+				doFind();
+				break;
+			case 'locate':
+				dialog.showOpenDialog({
+					title: data,
+					defaultPath: tabs[tab].path
+				},function(filePaths){
+					if(!filePaths) return;
+					var location=filePaths.toString();
+					location=location.replace(' ','\\ ');
+					if(more=='replace') tabs[tab].content.setRangeText(location);
+				});
+				break;
+			case 'special':
+				switch(data) {
+					case 'sendmail':
+						dialog.showOpenDialog({
+							title: data,
+							defaultPath: tabs[tab].path
+						},function(filePaths){
+							var location=filePaths.toString();
+							searchData={
+								string: 'sendmail_path',
+								fromIndex: 1,
+								caseSensitive: false
+							};
+							doFind();
+						});
+						break;
+				}
 				break;
 		}
 	});

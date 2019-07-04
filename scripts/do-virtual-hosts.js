@@ -37,6 +37,6 @@
 				root: form.elements.root.value,
 			});
 			form['content'].value=vhost;
-			setLineNumbers(3);
+			setLineNumbers('generator');
 		}
 	}
