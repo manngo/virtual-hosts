@@ -20,6 +20,7 @@
 	h3 {
 		margin: 0.5rem 0;
 	}
+
 /*	Layout
 	================================================
 	form#controls
@@ -395,4 +396,29 @@
 	}
 	div.help pre {
 		margin: .25rem 1.5rem;
+	}
+
+/*	Misc Actions
+	================================================ */
+
+	form#misc-actions div.etc {
+		padding: 1em;
+		width: 24em;
+	}
+
+	form#misc-actions div.etc p {
+		margin: .25em 0;
+	}
+	form#misc-actions div.etc p>button {
+		box-sizing: border-box;
+		background-color: #f8f8f8;
+		color: #333;
+		border: thin solid #666;
+		font-size: 1em;
+		padding: .5em 1em;
+		text-align: left;
+		width: 100%;
+	}
+	form#misc-actions div.etc p>button:hover {
+		background-color: #eee;
 	}

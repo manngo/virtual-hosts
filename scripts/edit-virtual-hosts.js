@@ -53,6 +53,7 @@
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
 				mysql:	'/Applications/XAMPP/xamppfiles/var/mysql',
 				phpini: '/Applications/XAMPP/xamppfiles/etc/php.ini',
+				phpmyadmin: '/Applications/XAMPP/xamppfiles/phpmyadmin/'
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
@@ -70,6 +71,7 @@
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
 				mysql:	'/Applications/MAMP/db/mysql57',
 				phpini: '/Applications/MAMP/bin/php/php{version}/conf/php.ini',
+				phpmyadmin: '/Applications/MAMP/bin/phpmyadmin/'
 			},
 			win32: {
 				conf: 'C:/MAMP/conf/apache/httpd.conf',
@@ -87,6 +89,7 @@
 				htdocs:	'/Applications/AMPPS/apache/htdocs',
 				mysql:	'/Applications/AMPPS/var/',
 				phpini: '/Applications/AMPPS/php/etc/php.ini',
+				phpmyadmin: '/Applications/AMPPS/phpmyadmin/'
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
@@ -180,7 +183,7 @@
 				'virtual-hosts': {title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
 				'generator': {title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
 				'php-ini': {title: 'php.ini', path: '', prefix: 'php-ini', save: 'Save php ini file', message: 'Open php.ini file or Select Server', status: ''},
-				'misc-text': {title: 'Miscellaneous File', path: '', message: 'Open Any File', status: ''},
+				'misc-text': {title: 'Miscellaneous File', path: '', save: 'Save Miscellaneous File', message: 'Open Any File', status: ''},
 				'misc-actions': {title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
 			};
 
@@ -226,9 +229,19 @@
 					        }
 					        console.log(`${filepath} deleted`);
 					    });
-
-
 				});
+			};
+			miscActions.elements['phpmyadmin-css'].onclick=function(event) {
+				if(!servers[server]) return;
+				tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`;
+				load('misc-text');
+				buttons['misc-text'].click();
+			};
+			miscActions.elements['phpmyadmin-config'].onclick=function(event) {
+				if(!servers[server]) return;
+				tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/config.inc.php`;
+				load('misc-text');
+				buttons['misc-text'].click();
 			};
 
 		//	Footer
@@ -262,7 +275,7 @@
 		;
 
 	if(DEVELOPMENT) {
-		buttons['php-ini'].click();
+		buttons['misc-actions'].click();
 		controls.elements['server'].value='xampp';
 		controls.elements['server'].dispatchEvent(new Event('change'));
 		window.webContents.openDevTools();
