@@ -53,7 +53,7 @@
 				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
 				mysql:	'/Applications/XAMPP/xamppfiles/var/mysql',
 				phpini: '/Applications/XAMPP/xamppfiles/etc/php.ini',
-				phpmyadmin: '/Applications/XAMPP/xamppfiles/phpmyadmin/'
+				phpmyadmin: '/Applications/XAMPP/xamppfiles/phpmyadmin/',
 			},
 			win32: {
 				conf: 'C:/xampp/apache/conf/httpd.conf',
@@ -61,6 +61,7 @@
 				htdocs:	'C:/xampp/htdocs/',
 				mysql:	'C:/xampp/mysql/data',
 				phpini: 'C:/xampp/php/php.ini',
+				phpmyadmin: 'C:/xampp/phpMyAdmin/',
 			},
 			vhost: ''
 		},
@@ -78,6 +79,7 @@
 				vhosts: 'C:/MAMP/bin/apache/conf/extra/httpd-vhosts.conf',
 				htdocs:	'C:/MAMP/htdocs/',
 				mysql:	'C:/MAMP/db/mysql',
+				phpmyadmin: 'C:/MAMP/bin/phpMyAdmin/'
 			},
 			vhost: '',
 		},
@@ -97,6 +99,7 @@
 				htdocs:	'C:/XAMPP/htdocs/',
 				mysql:	'C:/Program Files (x86)/Ampps/mysql/data',
 				phpini: '/Applications/AMPPS/php/etc/php.ini',
+				phpmyadmin: 'C:/Program Files (x86)/Ampps/phpMyAdmin/',
 			},
 			vhost: ''
 		},

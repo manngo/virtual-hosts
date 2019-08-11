@@ -1,5 +1,5 @@
 //	Development
-	const DEVELOPMENT=true;
+	const DEVELOPMENT=false;
 
 //	Export
 	module.exports={DEVELOPMENT};
