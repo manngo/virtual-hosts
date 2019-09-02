@@ -1,6 +1,6 @@
 {
 	"name": "edit-virtual-hosts",
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"description": "Edit Virtual Hosts",
 	"main": "main.js",
 	"repository": "https://github.com/manngo/edit-virtual-hosts",
