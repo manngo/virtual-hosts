@@ -1,5 +1,9 @@
 # edit-virtual-hosts
 
+Get the latest version from here: [https://github.com/manngo/edit-virtual-hosts/releases/latest](https://github.com/manngo/edit-virtual-hosts/releases/latest).
+
+## Introduction
+
 An Electron-based tool to simplify editing the `hosts` file and to create virtual hosts.
 
 The application has the following benefits:
