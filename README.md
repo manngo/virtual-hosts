@@ -1,4 +1,4 @@
-# edit-virtual-hosts
+# Edit Virtual Hosts
 
 An Electron-based tool to simplify editing the `hosts` file and to create virtual hosts.
 

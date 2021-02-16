@@ -236,7 +236,10 @@
 			};
 			miscActions.elements['phpmyadmin-css'].onclick=function(event) {
 				if(!servers[server]) return;
-				tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`;
+				switch(platform) {
+					case 'darwin':	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
+					case 'win32':	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
+				}
 				load('misc-text');
 				buttons['misc-text'].click();
 			};

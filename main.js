@@ -3,13 +3,26 @@
 //	Settings
 
 	const {DEVELOPMENT}=require('./settings.js');
-	if(DEVELOPMENT && process.platform == 'darwin')
-	if(DEVELOPMENT) require('electron-reload')(__dirname);
+	if(DEVELOPMENT && process.platform == 'darwin') require('electron-reload')(__dirname);
 
 //	Required Modules
 	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer, protocol} = require('electron');
+
+
 	//	console.log(require.resolve('electron'))
 	const path = require('path');
+
+
+
+
+
+
+
+
+
+
+
+
 
 //	Global Variables
 	var window, menu;

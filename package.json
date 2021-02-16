@@ -1,6 +1,6 @@
 {
 	"name": "edit-virtual-hosts",
-	"version": "0.4.3",
+	"version": "0.5.0",
 	"description": "Edit Virtual Hosts",
 	"main": "main.js",
 	"repository": "https://github.com/manngo/edit-virtual-hosts",
@@ -8,8 +8,8 @@
 	"author": "Mark Simon",
 	"license": "CC0-1.0",
 	"devDependencies": {
-		"electron": "^5.0.3",
-		"electron-packager": "^13.1.1"
+		"electron": "^11.2.3",
+		"electron-builder": "^22.9.1"
 	},
 	"dependencies": {
 		"electron-reload": "^1.4.0",
@@ -17,6 +17,31 @@
 		"temp": "^0.9.0"
 	},
 	"productName": "Edit Virtual Hosts",
+	"build": {
+		"appId": "com.webcraft101.edit-virtual-hosts",
+		"mac": {
+			"category": "public.app-category.developer-tools",
+			"target": [
+				"zip", "dmg"
+			],
+			"icon": "images/edit-virtual-hosts.icns"
+		},
+		"win": {
+			"target": [
+				"zip", "nsis", "portable"
+			],
+			"icon": "images/edit-virtual-hosts.ico"
+		},
+		"nsis": {
+			"oneClick": false,
+			"perMachine": false,
+			"allowElevation": true,
+			"allowToChangeInstallationDirectory": true
+		},
+		"directories": {
+			"output": "../electron-builder/${name}/${os}"
+		}
+	},
 	"scripts": {
 		"start": "electron .",
 		"pack": "electron-builder --dir",

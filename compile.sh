@@ -1,14 +1,22 @@
-rm -rf ../release-builds/*;
+#	rm -rf ../release-builds/*;
 
-electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out="../release-builds/" --icon ./images/edit-virtual-hosts.icns;
-electron-packager . --overwrite --platform=win32 --arch=x64 --prune=true --out="../release-builds" --icon images/edit-virtual-hosts.ico;
+#	electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --extra-resource="resources/fakemail" --out="../release-builds/" --icon ./images/edit-virtual-hosts.icns;
+#	electron-packager . --overwrite --platform=win32 --arch=x64 --prune=true --out="../release-builds" --icon images/edit-virtual-hosts.ico;
 
-cd "../release-builds";
+#	cd "../release-builds";
 
-mv "Edit Virtual Hosts-darwin-x64" "Edit Virtual Hosts MacOS";
-mv "Edit Virtual Hosts-win32-x64" "Edit Virtual Hosts Windows";
+#	mv "Edit Virtual Hosts-darwin-x64" "Edit Virtual Hosts MacOS";
+#	mv "Edit Virtual Hosts-win32-x64" "Edit Virtual Hosts Windows";
 
-zip -r -X "Edit Virtual Hosts MacOS.zip" "Edit Virtual Hosts MacOS/";
-zip -r -X "Edit Virtual Hosts Windows.zip" "Edit Virtual Hosts Windows/";
+#	zip -r -X "Edit Virtual Hosts MacOS.zip" "Edit Virtual Hosts MacOS/";
+#	zip -r -X "Edit Virtual Hosts Windows.zip" "Edit Virtual Hosts Windows/";
+
+	npm run dist
+	cd "../electron-builder/edit-virtual-hosts/";
+	mv "mac" "Edit Virtual Hosts macOS";
+#	mv "mac" "Edit Virtual Hosts macOS";
+
+
+
 
 cd ..
