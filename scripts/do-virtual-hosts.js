@@ -31,7 +31,7 @@
 			if(!editHosts.server) return;
 			var vhost=servers[editHosts.server].vhost;
 			vhost=vhost.sprintf({
-				htdocs: servers[editHosts.server].htdocs,
+				htdocs: servers[editHosts.server][editHosts.platform].htdocs,
 				project: form.elements.project.value,
 				domain: form.elements.domain.value,
 				root: form.elements.root.value,
