@@ -237,7 +237,7 @@
 			miscActions.elements['phpmyadmin-css'].onclick=function(event) {
 				if(!servers[server]) return;
 				switch(platform) {
-					case 'darwin':	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
+					case 'darwin':	//	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
 					case 'win32':	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
 				}
 				load('misc-text');

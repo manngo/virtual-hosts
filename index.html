@@ -53,10 +53,15 @@
 				<div class="help">
 					<h3>Apache Configuration File (httpd.conf)</h3>
 					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+
 					<p>Find <a href="doit:find:httpd-vhosts.conf"><code>httpd-vhosts.conf</code></a> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any).
 						This gives:</p>
 					<pre># Virtual hosts
 Include etc/extra/httpd-vhosts.conf</pre>
+
+					<p>(MacOS:) Find <a href="doit:find:User/Group"><code>User/Group</code></a> and change the User and Group to your own. Something like:</p>
+					<pre>User fred
+Group staff</pre>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open httpd.conf file or Select Platform</textarea>
@@ -95,6 +100,12 @@ Include etc/extra/httpd-vhosts.conf</pre>
 						Select the part after <code>sendmail_path=</code><br>
 						Locate your (fake) <a href="doit:locate:Sendmail Path:replace">sendmail</a> program and add the path at the end inside "quotes".<br>
 						This gives something like: <code>sendmail_path = "…/…/sendmail"</code></p>
+<!--
+					<p>While you’re at it,  check <a href="doit:find:extension=gd"><code>extension=gd</code></a> or
+						<a href="doit:find:extension=gd2"><code>extension=gd2</code></a>and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
+						This will enable you to use image functions in PHP.
+					</p>
+-->
 
 				</div>
 				<div class="textarea etc">
