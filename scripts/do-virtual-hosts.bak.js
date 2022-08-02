@@ -1,23 +1,30 @@
 /*	Do Virtual Hosts
 	================================================ */
 //	document.addEventListener('DOMContentLoaded',doVirtualHosts,false);
-	const { dialog } = require('electron').remote;
+//	const { dialog } = require('electron').remote;
+	const { ipcRenderer, shell} = require('electron');
 
 	var editHosts=require('./edit-virtual-hosts.js');
 	var {os,hosts,servers,setLineNumbers,platform,test,server}=editHosts;
 
 	doVirtualHosts();
+
 	function doVirtualHosts() {
 		var form=document.querySelector('form#generator');
 		form.elements['path'].onclick=function(event) {
-			event.preventDefault();
-			dialog.showOpenDialog({
-				properties: ['openDirectory']
-			},filePaths=>{
-		//		console.log(filePaths.toString());
-				form.elements['root'].value=filePaths.toString();
-			});
+			ipcRenderer.send('open-path',{
+				title: 'Title',
+				defaultPath: '/Volumes',
+			},'generator-path');
+
 		};
+
+		ipcRenderer.on('generator-path',(event,result)=>{
+		//	var data = result;
+			console.log(result);
+			if(!result.cancelled) form.elements['root'].value=result.filePaths[0].toString();
+		});
+
 		form['generate'].onclick=form['content'].onclick=doit;
 		//	Restore Values
 			var data=localStorage.getItem('data');

@@ -13,7 +13,8 @@
 				//	require('./renderer.js');
 				require('./scripts/utilities.js');
 				require('./scripts/edit-virtual-hosts.js');
-				require('./scripts/do-virtual-hosts.js');
+				//	require('./scripts/do-virtual-hosts.js');
+				//	alert('hello')
 			}
 		</script>
 	</head>
@@ -33,7 +34,7 @@
 					<option value="">Server …</option>
 					<option value="xampp">XAMPP</option>
 					<option value="mamp">MAMP</option>
-					<option value="ampps">AMPPS</option>
+					<!--option value="ampps">AMPPS</option-->
 				</select>
 			</div>
 		</form>
@@ -58,10 +59,11 @@
 						This gives:</p>
 					<pre># Virtual hosts
 Include etc/extra/httpd-vhosts.conf</pre>
-
-					<p>(MacOS:) Find <a href="doit:find:User/Group"><code>User/Group</code></a> and change the User and Group to your own. Something like:</p>
-					<pre>User fred
+					<div class="macos">
+						<p>(MacOS:) Find <a href="doit:find:User/Group"><code>User/Group</code></a> and change the User and Group to your own. Something like:</p>
+						<pre>User fred
 Group admin</pre>
+					</div>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open httpd.conf file or Select Platform</textarea>
@@ -98,14 +100,11 @@ Group admin</pre>
 					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
 					<p>Find <a href="doit:find:sendmail_path"><code>sendmail_path</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
 						Select the part after <code>sendmail_path=</code><br>
-						Locate your (fake) <a href="doit:locate:Sendmail Path:replace">sendmail</a> program and add the path at the end inside "quotes".<br>
-						This gives something like: <code>sendmail_path = "…/…/sendmail"</code></p>
-<!--
-					<p>While you’re at it,  check <a href="doit:find:extension=gd"><code>extension=gd</code></a> or
-						<a href="doit:find:extension=gd2"><code>extension=gd2</code></a>and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
+						Locate your (fake) <a href="doit:open:Sendmail Path:clipboard">sendmail</a> program and add the path at the end inside "quotes".<br>
+						This gives something like: <code>sendmail_path = "…/…/sendmail"</code>. Paste the resulting path.</p>
+					<p>While you’re at it,  check <a href="doit:find:extension ?= ?.*gd"><code>extension=gd</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
 						This will enable you to use image functions in PHP.
 					</p>
--->
 
 				</div>
 				<div class="textarea etc">

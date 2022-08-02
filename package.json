@@ -1,6 +1,6 @@
 {
 	"name": "edit-virtual-hosts",
-	"version": "0.5.0",
+	"version": "0.6.0",
 	"description": "Edit Virtual Hosts",
 	"main": "main.js",
 	"repository": "https://github.com/manngo/edit-virtual-hosts",
@@ -8,8 +8,8 @@
 	"author": "Mark Simon",
 	"license": "CC0-1.0",
 	"devDependencies": {
-		"electron": "^11.2.3",
-		"electron-builder": "^22.9.1"
+		"electron": "^18.3.5",
+		"electron-builder": "^23.0.3"
 	},
 	"dependencies": {
 		"electron-reload": "^1.4.0",
@@ -22,13 +22,16 @@
 		"mac": {
 			"category": "public.app-category.developer-tools",
 			"target": [
-				"zip", "dmg"
+				"zip",
+				"dmg"
 			],
 			"icon": "images/edit-virtual-hosts.icns"
 		},
 		"win": {
 			"target": [
-				"zip", "nsis", "portable"
+				"zip",
+				"nsis",
+				"portable"
 			],
 			"icon": "images/edit-virtual-hosts.ico"
 		},

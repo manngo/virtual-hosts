@@ -13,7 +13,7 @@
 
 	npm run dist
 	cd "../electron-builder/edit-virtual-hosts/";
-	mv "mac" "Edit Virtual Hosts macOS";
+#	mv "mac" "Edit Virtual Hosts macOS";
 #	mv "mac" "Edit Virtual Hosts macOS";
 
 

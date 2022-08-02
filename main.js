@@ -6,23 +6,11 @@
 	if(DEVELOPMENT && process.platform == 'darwin') require('electron-reload')(__dirname);
 
 //	Required Modules
-	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer, protocol} = require('electron');
-
+	//	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer, protocol} = require('electron');
+	const {app, BrowserWindow, Menu, MenuItem, shell, ipcRenderer, protocol, ipcMain, dialog} = require('electron');
 
 	//	console.log(require.resolve('electron'))
 	const path = require('path');
-
-
-
-
-
-
-
-
-
-
-
-
 
 //	Global Variables
 	var window, menu;
@@ -69,8 +57,9 @@
 				{	label: 'Instructions …', id: 'INSTRUCTIONS', click: send },
 				{	type:'separator' },
 				{	label: 'Edit Virtual Hosts Home', icon: path.join(__dirname, 'images/external.png'), click: () => { shell.openExternal('https://github.com/manngo/edit-virtual-hosts'); } },
-				{	label: 'Internotes Virtual Hosts', icon: path.join(__dirname,'images/external.png'), click: () => { shell.openExternal('https://www.internotes.net/virtual-hosts'); }
-				},
+				{	label: 'Internotes Virtual Hosts', icon: path.join(__dirname,'images/external.png'), click: () => { shell.openExternal('https://www.internotes.net/virtual-hosts'); } },
+				{	id: 'debug-separator', type:'separator' },
+				{	id: 'debug-developer-tools', accelerator: 'CmdOrCtrl+Shift+I', label: 'Show Development Tools', click: function (menuItem, focusedWindow) { window.webContents.openDevTools({mode: 'detach'}); } },
 			]
 		}
     ];
@@ -92,15 +81,14 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 			width: 1200,
 			height: 800,
 			webPreferences: {
-				nodeIntegration: true
+				nodeIntegration: true,
+      			contextIsolation: false,
+      			enableRemoteModule: true,
 			}
 		});
 
-
 	protocol.registerStringProtocol('doit',(request,callback)=>{
-//		console.log(request);
-//		console.log(callback);
-		var [dummy,action,data,more]=request.url.split(/:/);
+		var [dummy,action,data,more]=decodeURI(request.url).split(/:/);
 		window.webContents.send('DOIT',action,data,more);
 	},(error)=> {});
 
@@ -133,4 +121,26 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 	});
 	app.on('activate', function () {
 	  	if (window === null) init();
+	});
+
+	ipcMain.on('open-path',(event,options,returnMessage)=>{
+		options.properties=['openDirectory'];
+		openDialog(event,options,returnMessage);
+	});
+	ipcMain.on('open-file',(event,options,returnMessage)=>{
+		openDialog(event,options,returnMessage);
+	});
+	function openDialog(event,options,returnMessage) {
+		dialog.showOpenDialog(null, options).then(result => {
+	    	event.sender.send(returnMessage, result);
+	    });
+	}
+
+	ipcMain.on('home',(event,options)=>{
+		var home=`${app.getPath('home')}`;
+		event.returnValue = home;
+	});
+	ipcMain.on('app-path',(event,options)=>{
+		var home=`${app.getAppPath()}`;
+		event.returnValue = home;
 	});

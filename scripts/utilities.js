@@ -335,15 +335,18 @@
 	jx.findInTextarea=function(string,textarea,start,caseSensitive) {
 		if(!string || !textarea) return;
 		if(start===undefined) start=0;
-		var position = caseSensitive?textarea.value.indexOf(string,start):textarea.value.toLowerCase().indexOf(string.toLowerCase(),start);
-		// var position=textarea.value.search(new RegExp(string,'i'),start);
-		if(position>=0) {
-			textarea.selectionEnd = textarea.selectionStart = position;
+		//	var position = caseSensitive?textarea.value.indexOf(string,start):textarea.value.toLowerCase().indexOf(string.toLowerCase(),start);
+		var re = new RegExp(string,caseSensitive?'i':'');
+		//	var position = textarea.value.slice(start).search(string)+start;
+		var index = textarea.value.slice(start).search(string);
+			index = index>=0 ? index+start : -1;
+		if(index>=0) {
+			textarea.selectionEnd = textarea.selectionStart = index;
 			textarea.blur();
 			textarea.focus();
-			textarea.selectionEnd = position+string.length;
+			textarea.selectionEnd = index+string.length;
 		}
-		return position;
+		return index;
 	};
 
 /*	Useful, but not part of the Package

@@ -11,40 +11,34 @@
 	};
 
 //	Requires
+	//	const electron=require('electron');
+	const { electron, ipcRenderer, shell, clipboard } = require('electron');
 	const path = require('path');
 	const fs = require('fs');
 	const fsp = require('fs').promises;
-	const { ipcRenderer, shell} = require('electron');
-	const { dialog } = require('electron').remote;
 	const sudo = require('sudo-prompt');
-//	const BrowserWindow = require('browser-window');
-
-	const electron=require('electron');
-
-	const remote=electron.remote;
-	const app=remote.app;
-	const BrowserWindow = remote.BrowserWindow;
-
-	const window=remote.getCurrentWindow();
-	window.webContents.on('new-window', function(event, url) {
-	  event.preventDefault();
-	  shell.openExternal(url);
-	});
-
 	const temp=require('temp').track();
+//	const BrowserWindow = require('browser-window');
 
 	const {jx,DOM}=require('../scripts/utilities.js');
 
 //	Environment
 
-	var	form, controls, forms, buttons, footer, footerPath, footerMessage, files, tabs={}, server, test, searchForm, about, doShowAbout, popup=undefined,
-		searchData={string: '', fromIndex: 0, caseSensitive: false };
+	const home = ipcRenderer.sendSync('home');
+	const appPath = ipcRenderer.sendSync('app-path');
+	const package = JSON.parse(fs.readFileSync(`${appPath}/package.json`,'utf8'));
+
+	var	form, controls, forms, buttons,
+		footer, footerPath, footerMessage,
+		files, tabs={}, server, test,
+		about, doShowAbout, popup=undefined,
+		searchForm, searchData={string: '', fromIndex: 0, caseSensitive: false };
 	var platform=process.platform;
 	var os=require('os');
 	var hosts={
-		darwin: '/etc/hosts',
-		win32: 'C:\\Windows\\System32\\drivers\\etc\\hosts'
-	};
+			darwin: '/etc/hosts',
+			win32: 'C:\\Windows\\System32\\drivers\\etc\\hosts'
+		};
 	var servers={
 		xampp:	{
 			darwin: {
@@ -83,7 +77,7 @@
 			},
 			vhost: '',
 		},
-		ampps:	{
+/*		ampps:	{
 			darwin: {
 				conf: '/Applications/AMPPS/apache/conf/httpd.conf',	//	Actual
 //				conf: '/Applications/AMPPS/conf/httpd.conf',		//	Source
@@ -103,18 +97,26 @@
 			},
 			vhost: ''
 		},
+*/
 	};
 
 	servers.xampp.vhost=fs.readFileSync(path.join(__dirname, '../data/xampp.vhost')).toString().normaliseBR(os.EOL);
 	servers.mamp.vhost=fs.readFileSync(path.join(__dirname, '../data/mamp.vhost')).toString().normaliseBR(os.EOL);
 
-	module.exports={os,platform,hosts,servers,setLineNumbers,server,test};
+//	module.exports={os,platform,hosts,servers,setLineNumbers,server,test};
+
+	var customstyle = document.createElement('style');
+	window.document.head.insertAdjacentElement('beforeend',customstyle);
+	if(platform=='darwin') {
+		customstyle.sheet.insertRule('.macos { display: block; }');
+	}
 
 //	Main Process
 
 	main();
 
 	function main() {
+
 		form=tab=0;
 		forms={};
 		Object.defineProperty(forms,Symbol.iterator,iterableProperties);
@@ -173,10 +175,10 @@
 				tab=button.value;
 				for(let f of forms) f.classList.remove('selected');
 				forms[tab].classList.add('selected');
-				for(let button of buttons) button.classList.remove('selected');
+				for(let b of buttons) b.classList.remove('selected');
 				button.classList.add('selected');
 				if(tabs[tab].path!==undefined)
-				footerPath.innerHTML=tabs[tab].path;
+					footerPath.innerHTML=tabs[tab].path;
 				tabMessage(tab);
 			}
 
@@ -196,12 +198,12 @@
 				if(f.elements['content']){
 					tabs[f.id].content=f.elements['content'];
 					f.elements['content'].onkeydown=handleTab;
-					f.elements['content'].addEventListener('input',function(event) {
+					f.elements['content'].oninput=function(event) {
 						tabMessage(tab,'Edited','edited');
-					});
-					f.elements['content'].addEventListener('blur',function(event) {
+					};
+					f.elements['content'].onblur=function(event) {
 						searchData.fromIndex=this.selectionStart;
-					});
+					};
 
 					var lineNumbers=document.createElement('div');
 					lineNumbers.classList.add('line-numbers');
@@ -238,7 +240,8 @@
 				if(!servers[server]) return;
 				switch(platform) {
 					case 'darwin':	//	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
-					case 'win32':	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
+					case 'win32':	//	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
+					default:	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/js/vendor/codemirror/lib/codemirror.css`;
 				}
 				load('misc-text');
 				buttons['misc-text'].click();
@@ -261,6 +264,7 @@
 			searchForm=document.querySelector('form#search');
 			searchForm.elements['find'].onclick=newSearch;
 			//	searchForm.elements['replace'].onclick=replace;
+			searchForm.style.display='none';
 
 		//	About etc
 
@@ -268,6 +272,7 @@
 			jx.draggable(about);
 			doShowAbout=jx.popup(about,null,{escape: true});
 	}
+
 	//	Activate
 
 		load('hosts-file');
@@ -284,9 +289,9 @@
 		buttons['misc-actions'].click();
 		controls.elements['server'].value='xampp';
 		controls.elements['server'].dispatchEvent(new Event('change'));
-		window.webContents.openDevTools();
 	}
 	else buttons['hosts-file'].click();
+
 	function doAbout(file) {
 /*
 		if(!popup) popup=new BrowserWindow({
@@ -311,33 +316,24 @@ console.log(204)
 		popup.on('close',()=>{popup=undefined;});
 */
 
-		fs.readFile(path.join(app.getAppPath(),`content/${file}.html`), (err, data) => {
+		fs.readFile(path.join(appPath,`content/${file}.html`), (err, data) => {
 			about.innerHTML=data.toString();
+			about.querySelector('h2').innerHTML+=` ${package.version}`;
 			doShowAbout();
 		});
 	}
 
 
 //	Support Functions
-	function message(t,value,status) {
+	function tabMessage(t,value,status) {
+console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 		if(status!==undefined) tabs[t].status=status;
 		if(value) tabs[t].message=value;
 		if(t==tab) {
 			footerPath.innerHTML=tabs[t].path;
 			footerMessage.innerHTML=tabs[tab].message;
 			footerMessage.setAttribute('data-status',tabs[tab].status);
-			buttons[tab].setAttribute('data-status',tabs[tab].status);
 		}
-	}
-	function tabMessage(t,value,status) {
-console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
-			if(status!==undefined) tabs[t].status=status;
-			if(value) tabs[t].message=value;
-			if(t==tab) {
-				footerPath.innerHTML=tabs[t].path;
-				footerMessage.innerHTML=tabs[tab].message;
-				footerMessage.setAttribute('data-status',tabs[tab].status);
-			}
 		return new Promise((resolve,reject)=>{
 			resolve();
 		});
@@ -348,8 +344,7 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 		tabs[tab].lineNumbers.textContent=Array.from({length: lines},(v,i)=>i+1).join('\n');
 	}
 
-//	Tabs
-
+//	Tab Key
 	function handleTab(event) {
 		if(event.key=='Tab') {
 			var start=this.selectionStart;
@@ -363,48 +358,23 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 	}
 
 //	Open File
-
 	function openDialog() {
-		dialog.showOpenDialog({
-			title: tabs[tab].title,
-			defaultPath: tabs[tab].path
-		},function(filePaths){
-			tabs[tab].path=filePaths.toString();
-			load(tab);
+		ipcRenderer.send('open-file',{
+			title: 'Title',
+//			defaultPath: localStorage.getItem('defaultPath'),
+		},'open-file');
+		ipcRenderer.on('open-file',(event,result)=>{
+			if(result.canceled) return;
+			var path = result.filePaths[0].toString();
+			//	open file
+			tabs['misc-text'].path = path;
+			load('misc-text');
+			buttons['misc-text'].click();
 		});
 	}
+
 
 //	Load File
-
-	function readFile(path,action,callback) {
-		var test=0;
-		fsp
-		.readFile(path)
-		.then(data=>{
-			console.log('ok');
-			data=data.toString();
-			console.log(path.toString());
-			test=23;
-		})
-		.then(()=>{
-			console.log(test);
-		})
-		.then(()=>{
-			return 34;
-		})
-		.catch(error=>{
-			console.log(error);
-			return null;
-		});
-		return 57;
-	}
-
-	function testLoad(tab) {
-		return new Promise((resolve,reject)=>{
-			resolve('hello');
-		});
-	}
-
 	function load(tab) {
 		return new Promise((resolve,reject)=>{
 			if(!tabs[tab].path) return;
@@ -421,46 +391,9 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 				console.log(error);
 			});
 		});
-		// if(tabs[tab].path)
-		// 	fsp
-		// 	.readFile(tabs[tab].path)
-		// 	.then(data => {
-		// 		data=data.toString();
-		// 		forms[tab].elements['content'].value=data;
-		// 		tabMessage(tab,'Opened','opened');
-		// 		setLineNumbers(tab);
-		// 	})
-		// 	.catch(error=>{
-		// 		console.log(error);
-		// 	});
-		// else tabMessage(tab,'oops','');
 	}
-
-
-	function load2(tab) {
-testLoad(tab).then(data=>{console.log(data);});
-		if(tabs[tab].path) fs.readFile(tabs[tab].path, (error, data) => {
-			if(err) {
-				console.log(error);
-				return;
-			}
-			data=data.toString();
-			forms[tab].elements['content'].value=data;
-			tabMessage(tab,'Opened','opened');
-			setLineNumbers(tab);
-		});
-		else tabMessage(tab,'oops','');
-	}
-
-//	Save File with Permission
-
-	function saveFile() {
-
-	}
-
 
 //	Save Existing File
-
 	function save() {
 		if(!tabs[tab].path) return;
 		var command;
@@ -492,7 +425,6 @@ testLoad(tab).then(data=>{console.log(data);});
 	}
 
 //	Save As New File
-
 	function saveAs() {
 		var savePath=dialog.showSaveDialog();
 		if(savePath) {
@@ -501,9 +433,7 @@ testLoad(tab).then(data=>{console.log(data);});
 		}
 	}
 
-
 //	Find
-
 	function newSearch(event) {		if(DEVELOPMENT) console.log('finding …');
 		event.preventDefault();
 		var string=searchForm.elements['text'].value;
@@ -517,11 +447,13 @@ testLoad(tab).then(data=>{console.log(data);});
 		searchForm.style.display='none';
 	}
 
-	function doFind() {				if(DEVELOPMENT) console.log(`doFind ${searchData.string} …`);
-		searchData.fromIndex=jx.findInTextarea(searchData.string,forms[tab].elements['content'],searchData.fromIndex,searchData.caseSenstive)+1;
+	function doFind() {
+		console.log(`doFind ${searchData.string} …`);
+		var {string,fromIndex,caseSensitive} = searchData;
+		searchData.fromIndex=jx.findInTextarea(string,forms[tab].elements['content'],fromIndex,caseSensitive)+1;
 	}
 
-	function find() {				if(DEVELOPMENT) console.log('find');
+	function find() {				console.log('find');
 		//	Show Search Form
 			searchForm.style.display='flex';
 //		searchData.fromIndex=document.activeElement.selectionStart||0;
@@ -545,50 +477,47 @@ testLoad(tab).then(data=>{console.log(data);});
 
 	}
 
-//	IPC
-
+//	IPC DOIT Actions
 	ipcRenderer.on('DOIT',(event,action,data,more)=>{
+console.log(action);
+console.log(data);
+console.log(more);
 		switch(action) {
 			case 'find':
 				searchData={
 					string: data,
-					fromIndex: 1,
+					fromIndex: 0,
 					caseSensitive: false
 				};
 				doFind();
 				break;
-			case 'locate':
-				dialog.showOpenDialog({
-					title: data,
-					defaultPath: tabs[tab].path
-				},function(filePaths){
-					if(!filePaths) return;
-					var location=filePaths.toString();
-					location=location.replace(' ','\\ ');
-					if(more=='replace') tabs[tab].content.setRangeText(location);
+			case 'open':
+				ipcRenderer.send('open-file',{
+					title: 'Title',
+					defaultPath: tabs[tab].path,
+				},'sendmail-path');
+				ipcRenderer.on('sendmail-path',(event,result)=>{
+					console.log(result);
+					if(result.canceled) return;
+					var path = result.filePaths[0].toString();
+					clipboard.writeText(path);
 				});
-				break;
-			case 'special':
-				switch(data) {
-					case 'sendmail':
-						dialog.showOpenDialog({
-							title: data,
-							defaultPath: tabs[tab].path
-						},function(filePaths){
-							var location=filePaths.toString();
-							searchData={
-								string: 'sendmail_path',
-								fromIndex: 1,
-								caseSensitive: false
-							};
-							doFind();
-						});
-						break;
-				}
 				break;
 		}
 	});
 
+	ipcRenderer.on('open-file-paths',(event,result)=>{
+		if(result.canceled) return;
+		var pd = pathDetails(result.filePaths[0]);
+		localStorage.setItem('defaultPath',pd.path);
+		state['default-path'] = pd.path;
+		updateState();
+		result.filePaths.forEach(f=>{
+			openFile(f,true);
+		});
+	});
+
+//	IPC MENU
 	ipcRenderer.on('MENU',(event,data)=>{
 		switch(data) {
 			case 'NEW':
@@ -623,3 +552,36 @@ testLoad(tab).then(data=>{console.log(data);});
 				break;
 		}
 	});
+
+/*	Do Virtual Hosts
+	================================================ */
+
+	var form=document.querySelector('form#generator');
+	localStorage.setItem('defaultPath',home);
+	form.elements['path'].onclick=function(event) {
+		event.preventDefault();
+		ipcRenderer.send('open-path',{
+			title: 'Title',
+			defaultPath: localStorage.getItem('defaultPath'),
+		},'generator-path');
+	};
+	ipcRenderer.on('generator-path',(event,result)=>{
+		if(result.canceled) return;
+		var path = result.filePaths[0].toString();
+		form.elements['root'].value = path;
+		localStorage.setItem('defaultPath',path);
+	});
+
+	form['generate'].onclick = form['content'].onclick = function doit(event) {
+		event.preventDefault();
+		if(!server) return;
+		var vhost=servers[server].vhost;
+		vhost=vhost.sprintf({
+			htdocs: servers[server][platform].htdocs,
+			project: form.elements.project.value,
+			domain: form.elements.domain.value,
+			root: form.elements.root.value,
+		});
+		form['content'].value=vhost;
+		setLineNumbers('generator');
+	};
