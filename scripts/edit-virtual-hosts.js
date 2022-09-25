@@ -39,41 +39,46 @@
 			darwin: '/etc/hosts',
 			win32: 'C:\\Windows\\System32\\drivers\\etc\\hosts'
 		};
-	var servers={
+	var serverRoot = undefined;
+	var servers = {
 		xampp:	{
 			darwin: {
-				conf: '/Applications/XAMPP/etc/httpd.conf',
-				vhosts: '/Applications/XAMPP/xamppfiles/etc/extra/httpd-vhosts.conf',
-				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
-				mysql:	'/Applications/XAMPP/xamppfiles/var/mysql',
-				phpini: '/Applications/XAMPP/xamppfiles/etc/php.ini',
-				phpmyadmin: '/Applications/XAMPP/xamppfiles/phpmyadmin/',
+				root: 		'/Applications/XAMPP',
+				conf: 		'/etc/httpd.conf',
+				vhosts: 	'/xamppfiles/etc/extra/httpd-vhosts.conf',
+				htdocs:		'/xamppfiles/htdocs',
+				mysql:		'/xamppfiles/var/mysql',
+				phpini: 	'/xamppfiles/etc/php.ini',
+				phpmyadmin: '/xamppfiles/phpmyadmin/',
 			},
 			win32: {
-				conf: 'C:/xampp/apache/conf/httpd.conf',
-				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'C:/xampp/htdocs/',
-				mysql:	'C:/xampp/mysql/data',
-				phpini: 'C:/xampp/php/php.ini',
-				phpmyadmin: 'C:/xampp/phpMyAdmin/',
+				root: 		'C:/xampp',
+				conf: 		'/apache/conf/httpd.conf',
+				vhosts: 	'/apache/conf/extra/httpd-vhosts.conf',
+				htdocs:		'/htdocs/',
+				mysql:		'/mysql/data',
+				phpini: 	'/php/php.ini',
+				phpmyadmin: '/phpMyAdmin/',
 			},
 			vhost: ''
 		},
 		mamp:	{
 			darwin: {
-				conf: '/Applications/MAMP/conf/apache/httpd.conf',
-				vhosts: '/Applications/MAMP/conf/apache/extra/httpd-vhosts.conf',
-				htdocs:	'/Applications/XAMPP/xamppfiles/htdocs',
-				mysql:	'/Applications/MAMP/db/mysql57',
-				phpini: '/Applications/MAMP/bin/php/php{version}/conf/php.ini',
-				phpmyadmin: '/Applications/MAMP/bin/phpmyadmin/'
+				root: 		'/Applications/MAMP',
+				conf: 		'/conf/apache/httpd.conf',
+				vhosts: 	'/conf/apache/extra/httpd-vhosts.conf',
+				htdocs:		'/htdocs',
+				mysql:		'/db/mysql57',
+				phpini: 	'/bin/php/php{version}/conf/php.ini',
+				phpmyadmin: '/bin/phpmyadmin/'
 			},
 			win32: {
-				conf: 'C:/MAMP/conf/apache/httpd.conf',
-				vhosts: 'C:/MAMP/bin/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'C:/MAMP/htdocs/',
-				mysql:	'C:/MAMP/db/mysql',
-				phpmyadmin: 'C:/MAMP/bin/phpMyAdmin/'
+				root: 		'C:/MAMP',
+				conf: 		'/conf/apache/httpd.conf',
+				vhosts: 	'/bin/apache/conf/extra/httpd-vhosts.conf',
+				htdocs:		'/htdocs/',
+				mysql:		'/db/mysql',
+				phpmyadmin: '/bin/phpMyAdmin/'
 			},
 			vhost: '',
 		},
@@ -100,15 +105,17 @@
 */
 	};
 
-	servers.xampp.vhost=fs.readFileSync(path.join(__dirname, '../data/xampp.vhost')).toString().normaliseBR(os.EOL);
-	servers.mamp.vhost=fs.readFileSync(path.join(__dirname, '../data/mamp.vhost')).toString().normaliseBR(os.EOL);
+	servers.xampp.vhost = fs.readFileSync(path.join(__dirname, '../data/xampp.vhost')).toString().normaliseBR(os.EOL);
+	servers.xampp.vhostdefault = fs.readFileSync(path.join(__dirname, '../data/xampp-default.vhost')).toString().normaliseBR(os.EOL);
+	servers.mamp.vhost = fs.readFileSync(path.join(__dirname, '../data/mamp.vhost')).toString().normaliseBR(os.EOL);
+	servers.mamp.vhostdefault = fs.readFileSync(path.join(__dirname, '../data/mamp-default.vhost')).toString().normaliseBR(os.EOL);
 
 //	module.exports={os,platform,hosts,servers,setLineNumbers,server,test};
 
 	var customstyle = document.createElement('style');
 	window.document.head.insertAdjacentElement('beforeend',customstyle);
 	if(platform=='darwin') {
-		customstyle.sheet.insertRule('.macos { display: block; }');
+		customstyle.sheet.insertRule('li.macos { display: list-item; }');
 	}
 
 //	Main Process
@@ -136,13 +143,49 @@
 				this.removeAttribute('size',this.options.length);
 			};
 
+			controls.elements['server-path'].onclick=function(event) {
+				event.preventDefault();
+				ipcRenderer.send('open-path',{
+					title: 'Select Server Path',
+					defaultPath: localStorage.getItem('serverPath') || '/',
+				},'server-path');
+			};
+
+			controls.elements['server-root'].onkeyup = function(event) {
+				event.preventDefault();
+				controls.elements['server'].value = '';
+				//	serverRoot = event.target.value;
+			};
+
+			ipcRenderer.on('server-path',(event,result)=>{
+				if(result.canceled) return;
+				var path = result.filePaths[0].toString();
+				controls.elements['server-root'].value = path;
+				localStorage.setItem('serverPath',path);
+				controls.elements['server'].value = '';
+			});
+
+
 			controls.elements['server'].addEventListener('change',function(event) {
 				server=this.value;
-				if(server) {
-					tabs['httpd-conf'].path=servers[server][platform]['conf'];
+				if(server) doit();
+				else {
+					forms['php-ini'].elements['content'].value='';
+					tabs['php-ini'].path = '';
+					tabMessage('php-ini','','');
+					forms['httpd-conf'].elements['content'].value='';
+					tabs['httpd-conf'].path = '';
+					tabMessage('httpd-conf','','');
+					forms['virtual-hosts'].elements['content'].value='';
+					tabs['virtual-hosts'].path = '';
+					tabMessage('virtual-hosts','','');
+				}
+				function doit() {
+					serverRoot = controls.elements['server-root'].value || servers[server][platform]['root'];
+					tabs['httpd-conf'].path = serverRoot + servers[server][platform]['conf'];
 					load('httpd-conf')
 					.then(data=>{
-						var phpini=servers[server][platform]['phpini'];
+						var phpini = serverRoot+servers[server][platform]['phpini'];
 						var pattern=/php(\d\.\d+\.\d+)/;
 						var version=data.match(pattern);
 						if(version && phpini.match('{version}')) {
@@ -151,13 +194,13 @@
 						tabs['php-ini'].path=phpini;
 						load('php-ini');
 					});
-					tabs['virtual-hosts'].path=servers[server][platform]['vhosts'];
+					tabs['virtual-hosts'].path = serverRoot+servers[server][platform]['vhosts'];
 					load('virtual-hosts');
 
 					document.querySelectorAll('label.server').forEach(element=>{element.style.display='none';});
 					document.querySelectorAll(`label.${server}`).forEach(element=>{element.style.display='block';});
 				}
-				module.exports.server=server;
+				//	module.exports.server=server;
 			});
 
 		//	Tab Buttons
@@ -165,9 +208,20 @@
 			buttons={};
 			Object.defineProperty(buttons,Symbol.iterator,iterableProperties);
 
+			tabs={
+				'hosts-file': {title: 'Hosts File', path: hosts[platform], prefix: 'hosts', save: 'Save Hosts File', message: 'Opened', status: ''},
+				'httpd-conf': {title: 'httpd.conf', path: '', prefix: 'httpd', save: 'Save httpd conf', message: 'Open httpd.conf file or Select Server', status: ''},
+				'virtual-hosts': {title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
+				'generator': {title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
+				'php-ini': {title: 'php.ini', path: '', prefix: 'php-ini', save: 'Save php ini file', message: 'Open php.ini file or Select Server', status: ''},
+				'misc-text': {title: 'Miscellaneous File', path: '', save: 'Save Miscellaneous File', message: 'Open Any File', status: ''},
+				'misc-actions': {title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
+			};
+
 			for(let b of document.querySelectorAll('form#controls>div#tabs>button')) {
 				b.onclick=select.bind(b,b);
 				buttons[b.value]=b;
+				tabs[b.value].button = b;
 			}
 
 			function select(button,event) {
@@ -182,16 +236,6 @@
 				tabMessage(tab);
 			}
 
-			tabs={
-				'hosts-file': {title: 'Hosts File', path: hosts[platform], prefix: 'hosts', save: 'Save Hosts File', message: 'Opened', status: ''},
-				'httpd-conf': {title: 'httpd.conf', path: '', prefix: 'httpd', save: 'Save httpd conf', message: 'Open httpd.conf file or Select Server', status: ''},
-				'virtual-hosts': {title: 'vhosts.conf', path: '', prefix: 'vhosts', save: 'Save vhosts conf', message: 'Open vhosts.conf file or Select Server', status: ''},
-				'generator': {title: 'Generator', path: '', message: 'Enter Values to Generate Virtual Host'},
-				'php-ini': {title: 'php.ini', path: '', prefix: 'php-ini', save: 'Save php ini file', message: 'Open php.ini file or Select Server', status: ''},
-				'misc-text': {title: 'Miscellaneous File', path: '', save: 'Save Miscellaneous File', message: 'Open Any File', status: ''},
-				'misc-actions': {title: 'Miscellaneous Actions', path: '', message: 'Miscellenous Actions', status: ''},
-			};
-
 		//	Forms
 
 			for(let f of forms) {
@@ -199,6 +243,7 @@
 					tabs[f.id].content=f.elements['content'];
 					f.elements['content'].onkeydown=handleTab;
 					f.elements['content'].oninput=function(event) {
+						tabs[tab].button.setAttribute('data-status','edited')
 						tabMessage(tab,'Edited','edited');
 					};
 					f.elements['content'].onblur=function(event) {
@@ -225,7 +270,7 @@
 				if(!servers[server]) return;
 				var files=['ib_logfile0','ib_logfile1','mysql-bin.index'];
 				files.forEach(file=>{
-					var filepath=`${servers[server][platform].mysql}/${file}`;
+					var filepath=`${serverRoot}${servers[server][platform].mysql}/${file}`;
 					if(fs.existsSync(filepath));
 						fs.unlink(filepath, (error) => {
 					        if (error) {
@@ -239,16 +284,16 @@
 			miscActions.elements['phpmyadmin-css'].onclick=function(event) {
 				if(!servers[server]) return;
 				switch(platform) {
-					case 'darwin':	//	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
-					case 'win32':	//	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
-					default:	tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/js/vendor/codemirror/lib/codemirror.css`;
+					case 'darwin':	//	tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/common.css.php`; break;
+					case 'win32':	//	tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
+					default:	tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/js/vendor/codemirror/lib/codemirror.css`;
 				}
 				load('misc-text');
 				buttons['misc-text'].click();
 			};
 			miscActions.elements['phpmyadmin-config'].onclick=function(event) {
 				if(!servers[server]) return;
-				tabs['misc-text'].path=`${servers[server][platform]['phpmyadmin']}/config.inc.php`;
+				tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/config.inc.php`;
 				load('misc-text');
 				buttons['misc-text'].click();
 			};
@@ -415,6 +460,7 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 							});
 						});
 					});
+					tabs[tab].button.removeAttribute('data-status')
 					tabMessage(tab,'Saved','saved');
 				}
 			}
@@ -561,7 +607,7 @@ console.log(more);
 	form.elements['path'].onclick=function(event) {
 		event.preventDefault();
 		ipcRenderer.send('open-path',{
-			title: 'Title',
+			title: 'Document Root',
 			defaultPath: localStorage.getItem('defaultPath'),
 		},'generator-path');
 	};
@@ -575,13 +621,14 @@ console.log(more);
 	form['generate'].onclick = form['content'].onclick = function doit(event) {
 		event.preventDefault();
 		if(!server) return;
-		var vhost=servers[server].vhost;
+		var vhostdefault = form['vhost-default'].checked ? servers[server].vhostdefault+os.EOL+os.EOL : '';
+		var vhost = servers[server].vhost;
 		vhost=vhost.sprintf({
-			htdocs: servers[server][platform].htdocs,
+			htdocs: serverRoot+servers[server][platform].htdocs,
 			project: form.elements.project.value,
 			domain: form.elements.domain.value,
 			root: form.elements.root.value,
 		});
-		form['content'].value=vhost;
+		form['content'].value=vhostdefault+vhost;
 		setLineNumbers('generator');
 	};

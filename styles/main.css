@@ -1,3 +1,61 @@
+/*	Theme
+	================================================ */
+
+	body {
+		--theme-color: #2A5F5B;
+		--misc-action-button-color: #333;
+		--misc-action-button-background-color: #f8f8f8;
+		--misc-action-button-hover-background-color: #eee;
+		--misc-action-button-border-color: #666;
+
+		--tabs-button-background-color: #ddd;
+		--tabs-button-border-color: #999;
+		--tabs-button-text-shadow: 0 1px 0 white;
+		--tabs-button-selected-background-color: #f8f8f8f8;
+		--tabs-button-selected-border-color: #f8f8f8f8;
+
+		--tabs-button-status-edited-background-color: #f8f8f8;
+		--tabs-button-status-edited-border-color: red;
+
+		--misc-select-color: #333;
+		--misc-select-text-shadow: 0 1px 0 white;
+		--misc-select-background-color: #f8f8f8;
+		--misc-select-border-color: #ccc;
+		--misc-select-option-color: #eee;
+
+		--search-background-color: #f8f8f8;
+		--search-case-sensitive-label-border-color: #ddd;
+		--search-case-sensitive-label-background: linear-gradient(to bottom, #f8f8f8, #eee);
+		--search-case-sensitive-label-box-shadow: inset 1px 1px 1px white, inset -1px -1px 1px #ddd;
+		--search-case-sensitive-checked-label-color: white;
+		--search-case-sensitive-checked-label-border-color: #666;
+		--search-case-sensitive-checked-label-background: linear-gradient(to bottom, #777, #666);
+		--search-case-sensitive-checked-label-box-shadow: inset 1px 1px 1px #666;
+
+		--footer-background: linear-gradient(to bottom, #f8f8f8, #ccc);
+		--footer-border-color: #ccc;
+		--footer-status-edited: red;
+		--footer-info-text-shadow: 0 1px 0 white;
+
+		--line-numbers-color: white;
+		--line-numbers-background-color: #2A5F5B;
+		--line-numbers-border-color: #ccc;
+
+		--generator-button-color: #333;
+		--generator-button-background-color: #eee;
+		--generator-button-border-color: #eee;
+		--generator-button-hover-background-color: #ddd;
+
+		--about-background-color: white;
+		--about-border-color: var(--theme-color);
+		--about-box-shadow: 4px 4px 4px #666;
+		--about-headings-color: var(--theme-color);
+		--about-anchor-color: var(--theme-color);
+
+		--help-background-color: #f8f8f8;
+		--help-border-color: #999;
+	}
+
 /*	Core
 	================================================ */
 
@@ -52,6 +110,9 @@
 	}
 	form#controls>div#misc {
 
+	}
+	form#controls>div#choose-server-root {
+		margin-top: .25rem;
 	}
 
 	div#forms {
@@ -117,50 +178,49 @@
 		display: flex;
 		flex-direction: row;
 	}
+
 	form#controls>div#tabs>button {
-		border: thin solid #999;
+		border: thin solid var(--tabs-button-border-color);
 		border-style: none solid none none;
-		background-color: #ddd;
+		background-color: var(--tabs-button-background-color);
+		text-shadow: var(--tabs-button-text-shadow);
 		outline: none;
 		font-family: var(--sans-serif);
-		text-shadow: 0 1px 0 white;
 		font-size: .9rem;
 		padding: .375rem .5rem;
 	}
 	form#controls>div#tabs>button.selected {
-		background-color: #f8f8f8;
-		border-bottom: thin solid #f8f8f8;
+		background-color: var(--tabs-button-selected-background-color);
+		border-bottom: thin solid var(--tabs-button-selected-border-color);
 	}
 	form#controls>div#tabs>button[data-status="edited"] {
-		background-color: #f8f8f8;
-		qbackground-color: red;
-		border-bottom: medium solid red;
+		background-color: var(--tabs-button-status-edited-background-color);
+		border-bottom: medium solid var(--tabs-button-status-edited-border-color);
 	}
 
 	form#controls>div#misc>select {
-		background-color: #ddd;
+		color: var(--misc-select-color);
+		background-color: var(--misc-select-background-color);
+		border: thin solid var(--misc-select-border-color);
 		font-size: .9rem;
 		-webkit-appearance: none;
 		appearance: none;
-		border: thin solid #999;
 		padding: .125rem .25rem;
 		border-radius: 0;
 		outline: none;
 		width: 8em;
-		color: #333;
-		text-shadow: 0 1px 0 white;
 
 		font-family: var(--sans-serif);
-		text-shadow: 0 1px 0 white;
+		text-shadow: var(--misc-select-text-shadow);
 		font-size: .9rem;
 
-		border: thin solid #ccc;
 		margin: .125rem;
-		background: #f8f8f8
 	}
+
 	form#controls>div#misc>select>option {
-		background-color: #eee;
+		background-color: var(--misc-select-option-color);
 	}
+
 	form#qcontrols>div#misc>select:before {
 		content: "*";
 	}
@@ -172,9 +232,8 @@
 	================================================ */
 
 	form#search {
-		display: none;
 		display: flex;
-		background-color: #f8f8f8;
+		background-color: var(--search-background-color);
 		padding: .25rem .25rem;
 		font-size: .8rem;
 		width: 100%;
@@ -192,21 +251,17 @@
 		display: none;
 	}
 	form#search input[id="search-case-sensitive"]+label {
-		border: thin solid #ddd;
-		background: linear-gradient(to bottom, #f8f8f8, #eee);
-		box-shadow:
-			inset 1px 1px 1px white,
-			inset -1px -1px 1px #ddd
-			;
+		border: thin solid var(--search-case-sensitive-label-border-color);
+		background: var(--search-case-sensitive-label-background);
+		box-shadow: var(--search-case-sensitive-label-box-shadow);
 		padding: .125em .5em .25em;
 		margin-right: 2em;
 	}
 	form#search input[id="search-case-sensitive"]:checked+label {
-		color: white;
-		border: thin solid #666;
-		background: linear-gradient(to bottom, #777, #666);
-		box-shadow:
-			inset 1px 1px 1px #666;
+		color: var(--search-case-sensitive-checked-label-color);
+		border: thin solid var(--search-case-sensitive-checked-label-border-color);
+		background: var(--search-case-sensitive-checked-label-background);
+		box-shadow: var(--search-case-sensitive-checked-label-box-shadow);
 	}
 
 
@@ -215,9 +270,9 @@
 
 	footer {
 		box-sizing: border-box;
-		background: linear-gradient(to bottom, #f8f8f8, #ccc);
+		background: var(--footer-background);
 		padding: 0rem .5rem .25rem 1rem;
-		border-top: thin solid #ccc;
+		border-top: thin solid var(--footer-border-color);
 		pointer-events: none;
 		display: flex;
 		flex-direction: column;
@@ -235,11 +290,11 @@
 		padding: .25rem;
 		font-family: var(--sans-serif);
 		font-size: .9rem;
-		text-shadow: 0 1px 0 white;
+		text-shadow: var(--footer-info-text-shadow);
 	}
 
 	footer>div#info>p#message[data-status="edited"] {
-		color: red;
+		color: var(--footer-status-edited);
 	}
 
 /*	Content
@@ -286,16 +341,15 @@
 	================================================ */
 
 	div.line-numbers {
+		color: var(--line-numbers-color);
+		background-color: var(--line-numbers-background-color);
+		border-right: thin solid var(--line-numbers-border-color);
 		box-sizing: border-box;
 		white-space: pre;
 		width: 4em;
 		text-align: right;
 		padding-right: .5rem;
-		qbackground-color: #eee;
 		overflow: auto;
-		border-right: thin solid #ccc;
-		background-color: #2A5F5B;
-		color: white;
 	}
 	div.line-numbers::-webkit-scrollbar {
 	    display: none;
@@ -345,18 +399,18 @@
 		margin-bottom: .25rem;
 	}
 	form#generator button[name="generate"] {
-		color: #333;
+		color: var(--generator-button-color);
+		background-color: var(--generator-button-background-color);
+		border: thin solid var(--generator-button-border-color);
 		margin-top: .5rem;
-		border: thin solid #ddd;
 		width: 12rem;
 		border-radius: 4px;
 		padding: .5rem .75rem;
-		background-color: #eee;
 		font-size: 1rem;
 		outline: none;
 	}
 	form#generator button[name="generate"]:hover {
-		background-color: #ddd;
+		background-color: var(--generator-button-hover-background-color);
 	}
 	div#generated {
 		qdisplay: flex;
@@ -404,24 +458,24 @@
 	}
 
 	div#about {
+		background-color: var(--about-background-color);
+		border: thick solid var(--about-border-color);
+		box-shadow: var(--about-box-shadow);
 		position: fixed;
 		top: 0; bottom: 0; left: 0; right: 0;
 		width: 480px; height: 480px;
 		margin: auto;
-		background-color: white;
-		border: thick solid #2A5F5B;
 		padding: 1em;
-		box-shadow: 4px 4px 4px #666;
 		overflow: auto;
 		-moz-tab-size: 4;
 		tab-size: 4;
 	}
 	div#about h2, div#about h3 {
-		color: #2A5F5B;
+		color: var(--about-headings-color);
 		font-weight: bold;
 	}
 	div#about a {
-		color: #2A5F5B;
+		color: var(--about-anchor-color);
 		text-decoration: none;
 		border-bottom: thin solid transparent;
 		padding-bottom: .125em;
@@ -434,10 +488,30 @@
 	================================================ */
 
 	div.help {
-		border-bottom: thin solid #999;
+		background-color: var(--help-background-color);
+		border-bottom: thin solid var(--help-border-color);
 		padding: 1rem;
-		background-color: #f8f8f8;
 		font-size: .9rem;
+	}
+
+	div.help>ol {
+		margin:  0;
+		padding: 0;
+		qlist-style-position: inside;
+	}
+	div.help>ol>li {
+		margin: 0.5em 1.0em;
+	}
+	div.help>ol>li>pre {
+		margin-top: 0.5rem;
+		margin-bottom: 0
+	}
+	div.help>ol>li>pre+pre {
+		margin-top: 0;
+	}
+	div.help>ol>li>ul {
+		list-style: disc;
+		margin: 0;
 	}
 
 	div.help>p {
@@ -466,15 +540,15 @@
 		margin: .25em 0;
 	}
 	form#misc-actions div.etc p>button {
+		color: var(--misc-action-button-color);
+		background-color: var(--misc-action-button-background-color);
 		box-sizing: border-box;
-		background-color: #f8f8f8;
-		color: #333;
-		border: thin solid #666;
+		border: thin solid var(--misc-action-button-border-color);
 		font-size: 1em;
 		padding: .5em 1em;
 		text-align: left;
 		width: 100%;
 	}
 	form#misc-actions div.etc p>button:hover {
-		background-color: #eee;
+		background-color: var(--misc-action-button-hover-background-color);
 	}

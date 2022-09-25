@@ -29,9 +29,14 @@
 				<button value="misc-text">File</button>
 				<button value="misc-actions">Actions</button>
 			</div>
+			<div id="choose-server-root">
+				<label for="server-root">Server Root</label>
+				<input type="text" id="server-root" name="server-root" value="" placeholder="Leave empty for default" title="Full Path to Server Folder">
+				<button name="server-path">Select Folder …</button>
+			</div>
 			<div id="misc">
 				<select name="server" size="1">
-					<option value="">Server …</option>
+					<option value="">Choose One …</option>
 					<option value="xampp">XAMPP</option>
 					<option value="mamp">MAMP</option>
 					<!--option value="ampps">AMPPS</option-->
@@ -42,9 +47,11 @@
 			<form id="hosts-file">
 				<div class="help">
 					<h3>Hosts File (etc/host)</h3>
-					<p>Add:</p>
-					<pre>127.0.0.1	www.example.com</pre>
-					<p>or something like it to the bottom of the file</p>
+					<ol>
+						<li>Add:
+							<pre>127.0.0.1	www.example.com</pre>
+							or something like it to the bottom of the file</li>
+					</ol>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open hosts file or Select Platform</textarea>
@@ -53,17 +60,19 @@
 			<form id="httpd-conf">
 				<div class="help">
 					<h3>Apache Configuration File (httpd.conf)</h3>
-					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
-
-					<p>Find <a href="doit:find:httpd-vhosts.conf"><code>httpd-vhosts.conf</code></a> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any).
-						This gives:</p>
-					<pre># Virtual hosts
-Include etc/extra/httpd-vhosts.conf</pre>
-					<div class="macos">
-						<p>(MacOS:) Find <a href="doit:find:User/Group"><code>User/Group</code></a> and change the User and Group to your own. Something like:</p>
-						<pre>User fred
-Group admin</pre>
-					</div>
+					<ol>
+						<li>If you have installed in a non-standard location, enter it in the <strong>Server Root</strong></li>
+						<li>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</li>
+						<li>Find <a href="doit:find:httpd-vhosts.conf"><code>httpd-vhosts.conf</code></a> and remove the comment(<code>#</code>) at the beginning of the <code>Include</code> (if any). This gives:
+							<pre># Virtual hosts</pre>
+							<pre>Include etc/extra/httpd-vhosts.conf</pre>
+						</li>
+						<li class="macos">
+							(MacOS:) Find <a href="doit:find:User/Group"><code>User/Group</code></a> and change the User and Group to your own. Something like:
+							<pre>User fred</pre>
+							<pre>Group admin</pre>
+						</li>
+					</ol>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open httpd.conf file or Select Platform</textarea>
@@ -72,9 +81,12 @@ Group admin</pre>
 			<form id="virtual-hosts">
 				<div class="help">
 					<h3>Virtual Hosts File (httpd-vhosts.conf)</h3>
-					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
-					<p>First, use the <strong>Generator</strong> tab and fill in the details.</p>
-					<p>Then copy the result and paste it below.</p>
+					<ol>
+						<li>If you have installed in a non-standard location, enter it in the <strong>Server Root</strong></li>
+						<li>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</li>
+						<li>First, use the <strong>Generator</strong> tab and fill in the details.</li>
+						<li>Then copy the result and paste it below.</li>
+					</ol>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
@@ -83,10 +95,13 @@ Group admin</pre>
 			<form id="generator">
 				<div class="help">
 					<h3>Hosts Generator</h3>
-					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
+					<ol>
+						<li>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</li>
+						<li>Fill in the details blow and click <strong>Generate</strong></li>
+					</ol>
 				</div>
 				<div class="etc">
-					<p><label class="server xampp"><input type="checkbox" name="xampp-default" value="1" title="Short Project Name" checked> Include Default Host</label></p>
+					<p><label class="server xampp"><input type="checkbox" name="vhost-default" value="1" title="Short Project Name" checked> Include Default Host</label></p>
 					<p><label for="project">Project Name</label><input type="text" id="project" name="project" value="example" placeholder="Short Project Name" title="Short Project Name"></p>
 					<p><label for="domain">Virtual Domain</label><input type="text" id="domain" name="domain" value="www.example.com" placeholder="Site Domain Name" title="Virtual Domain Name"></p>
 					<p><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></p>
@@ -97,15 +112,18 @@ Group admin</pre>
 			<form id="php-ini">
 				<div class="help">
 					<h3>PHP Configuration File (php.ini)</h3>
-					<p>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</p>
-					<p>Find <a href="doit:find:sendmail_path"><code>sendmail_path</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
-						Select the part after <code>sendmail_path=</code><br>
-						Locate your (fake) <a href="doit:open:Sendmail Path:clipboard">sendmail</a> program and add the path at the end inside "quotes".<br>
-						This gives something like: <code>sendmail_path = "…/…/sendmail"</code>. Paste the resulting path.</p>
-					<p>While you’re at it,  check <a href="doit:find:extension ?= ?.*gd"><code>extension=gd</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).<br>
-						This will enable you to use image functions in PHP.
-					</p>
-
+					<ol>
+						<li>If you have installed in a non-standard location, enter it in the <strong>Server Root</strong></li>
+						<li>Make sure that you have selected the server (XAMPP or MAMP) from the menu.</li>
+						<li>Set the <strong>sendmail path</strong>:
+							<ul>
+								<li>Find <a href="doit:find:sendmail_path"><code>sendmail_path</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any).</li>
+								<li>Select the part after <code>sendmail_path=</code></li>
+								<li>Locate your (fake) <a href="doit:open:Sendmail Path:clipboard">sendmail</a> program and add the path at the end inside "quotes".</li>
+							</ul>
+							This gives something like: <code>sendmail_path = "…/…/sendmail"</code>. Paste the resulting path.</li>
+						<li>While you’re at it,  check <a href="doit:find:extension ?= ?.*gd"><code>extension=gd</code></a> and remove the comment(<code>;</code>) at the beginning of the line(if any). This will enable you to use image functions in PHP.	</li>
+					</ol>
 				</div>
 				<div class="textarea etc">
 					<textarea name="content">Open php.ini file or Select Platform</textarea>

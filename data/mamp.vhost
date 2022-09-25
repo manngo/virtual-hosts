@@ -1,6 +1,3 @@
-#	MAMP	!! Do Not Repeat !!
-	NameVirtualHost *:80
-
 #	MAMP	[project]: [domain]
 
 	<VirtualHost *:80>

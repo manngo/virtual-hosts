@@ -1,14 +1,3 @@
-#	XAMPP	Required Default	!! Do Not Repeat !!
-	<VirtualHost *:80>
-	ServerName localhost
-	DocumentRoot "[htdocs]"
-	<Directory "[htdocs]">
-		Options Indexes FollowSymLinks Includes execCGI
-		AllowOverride All
-		Require all granted
-		</Directory>
-	</VirtualHost>
-
 #	XAMPP	[project]: [domain]
 	<VirtualHost *:80>
 		ServerName [domain]
