@@ -20,13 +20,16 @@
 	const temp=require('temp').track();
 //	const BrowserWindow = require('browser-window');
 
-	const {jx,DOM}=require('../scripts/utilities.js');
+	const {jx, DOM, JSONFile}=require('../scripts/utilities.js');
 
 //	Environment
 
 	const home = ipcRenderer.sendSync('home');
 	const appPath = ipcRenderer.sendSync('app-path');
 	const package = JSON.parse(fs.readFileSync(`${appPath}/package.json`,'utf8'));
+
+	var jf = new JSONFile();
+
 
 	var	form, controls, forms, buttons,
 		footer, footerPath, footerMessage,
@@ -35,75 +38,10 @@
 		searchForm, searchData={string: '', fromIndex: 0, caseSensitive: false };
 	var platform=process.platform;
 	var os=require('os');
-	var hosts={
-			darwin: '/etc/hosts',
-			win32: 'C:\\Windows\\System32\\drivers\\etc\\hosts'
-		};
+
+	var {hosts, servers} = JSON.parse(fs.readFileSync(`${appPath}/data/servers.json`,'utf8'));
+
 	var serverRoot = undefined;
-	var servers = {
-		xampp:	{
-			darwin: {
-				root: 		'/Applications/XAMPP',
-				conf: 		'/etc/httpd.conf',
-				vhosts: 	'/xamppfiles/etc/extra/httpd-vhosts.conf',
-				htdocs:		'/xamppfiles/htdocs',
-				mysql:		'/xamppfiles/var/mysql',
-				phpini: 	'/xamppfiles/etc/php.ini',
-				phpmyadmin: '/xamppfiles/phpmyadmin/',
-			},
-			win32: {
-				root: 		'C:/xampp',
-				conf: 		'/apache/conf/httpd.conf',
-				vhosts: 	'/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:		'/htdocs/',
-				mysql:		'/mysql/data',
-				phpini: 	'/php/php.ini',
-				phpmyadmin: '/phpMyAdmin/',
-			},
-			vhost: ''
-		},
-		mamp:	{
-			darwin: {
-				root: 		'/Applications/MAMP',
-				conf: 		'/conf/apache/httpd.conf',
-				vhosts: 	'/conf/apache/extra/httpd-vhosts.conf',
-				htdocs:		'/htdocs',
-				mysql:		'/db/mysql57',
-				phpini: 	'/bin/php/php{version}/conf/php.ini',
-				phpmyadmin: '/bin/phpmyadmin/'
-			},
-			win32: {
-				root: 		'C:/MAMP',
-				conf: 		'/conf/apache/httpd.conf',
-				vhosts: 	'/bin/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:		'/htdocs/',
-				mysql:		'/db/mysql',
-				phpmyadmin: '/bin/phpMyAdmin/'
-			},
-			vhost: '',
-		},
-/*		ampps:	{
-			darwin: {
-				conf: '/Applications/AMPPS/apache/conf/httpd.conf',	//	Actual
-//				conf: '/Applications/AMPPS/conf/httpd.conf',		//	Source
-				vhosts: '/Applications/AMPPS/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'/Applications/AMPPS/apache/htdocs',
-				mysql:	'/Applications/AMPPS/var/',
-				phpini: '/Applications/AMPPS/php/etc/php.ini',
-				phpmyadmin: '/Applications/AMPPS/phpmyadmin/'
-			},
-			win32: {
-				conf: 'C:/xampp/apache/conf/httpd.conf',
-				vhosts: 'C:/xampp/apache/conf/extra/httpd-vhosts.conf',
-				htdocs:	'C:/XAMPP/htdocs/',
-				mysql:	'C:/Program Files (x86)/Ampps/mysql/data',
-				phpini: '/Applications/AMPPS/php/etc/php.ini',
-				phpmyadmin: 'C:/Program Files (x86)/Ampps/phpMyAdmin/',
-			},
-			vhost: ''
-		},
-*/
-	};
 
 	servers.xampp.vhost = fs.readFileSync(path.join(__dirname, '../data/xampp.vhost')).toString().normaliseBR(os.EOL);
 	servers.xampp.vhostdefault = fs.readFileSync(path.join(__dirname, '../data/xampp-default.vhost')).toString().normaliseBR(os.EOL);
@@ -131,8 +69,17 @@
 		for(let f of document.querySelectorAll('div#forms>form')) forms[f.id]=f;
 		controls=document.querySelector('form#controls');
 
-		//	Controls
+		//	Saved State
+			jf.init(`${home}/.edit-virtual-hosts.json`)
+			.then(()=>jf.read())
+			.then(()=>{
+				var settings = jf.data;
+				if(settings["server-root"]) controls.elements["server-root"].value = settings["server-root"];
+				if(settings["server"]) controls.elements["server"].value = settings["server"];
+			})
+			;
 
+		//	Controls
 			controls.elements['server'].onfocus=function(event) {
 				this.setAttribute('size',this.options.length);
 			};
@@ -143,31 +90,42 @@
 				this.removeAttribute('size',this.options.length);
 			};
 
-			controls.elements['server-path'].onclick=function(event) {
+			controls.elements['server-path'].onclick=function(event) {	//	button
 				event.preventDefault();
 				ipcRenderer.send('open-path',{
 					title: 'Select Server Path',
 					defaultPath: localStorage.getItem('serverPath') || '/',
 				},'server-path');
 			};
-
-			controls.elements['server-root'].onkeyup = function(event) {
-				event.preventDefault();
-				controls.elements['server'].value = '';
-				//	serverRoot = event.target.value;
-			};
-
 			ipcRenderer.on('server-path',(event,result)=>{
 				if(result.canceled) return;
 				var path = result.filePaths[0].toString();
 				controls.elements['server-root'].value = path;
 				localStorage.setItem('serverPath',path);
 				controls.elements['server'].value = '';
+				jf.write({"server-root":controls.elements['server-root'].value, server: ''});
+			});
+
+			controls.elements['server-root'].addEventListener('input', event => {
+				event.preventDefault();
+				controls.elements['server'].value = '';
+				//	serverRoot = event.target.value;
+			});
+			controls.elements['server-root'].addEventListener('change', event => {
+				jf.write({"server-root":controls.elements['server-root'].value, server: ''});
 			});
 
 
 			controls.elements['server'].addEventListener('change',function(event) {
 				server=this.value;
+				jf.write({ server: controls.elements['server'].value});
+
+				//	TODO: Verify change if data-status is unsaved
+
+				tabs['php-ini'].button.removeAttribute('data-status');
+				tabs['httpd-conf'].button.removeAttribute('data-status');
+				tabs['virtual-hosts'].button.removeAttribute('data-status');
+
 				if(server) doit();
 				else {
 					forms['php-ini'].elements['content'].value='';
@@ -243,7 +201,7 @@
 					tabs[f.id].content=f.elements['content'];
 					f.elements['content'].onkeydown=handleTab;
 					f.elements['content'].oninput=function(event) {
-						tabs[tab].button.setAttribute('data-status','edited')
+						tabs[tab].button.setAttribute('data-status','edited');
 						tabMessage(tab,'Edited','edited');
 					};
 					f.elements['content'].onblur=function(event) {
@@ -460,7 +418,7 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 							});
 						});
 					});
-					tabs[tab].button.removeAttribute('data-status')
+					tabs[tab].button.removeAttribute('data-status');
 					tabMessage(tab,'Saved','saved');
 				}
 			}
@@ -622,13 +580,13 @@ console.log(more);
 		event.preventDefault();
 		if(!server) return;
 		var vhostdefault = form['vhost-default'].checked ? servers[server].vhostdefault+os.EOL+os.EOL : '';
-		var vhost = servers[server].vhost;
+		var vhost = vhostdefault+servers[server].vhost;
 		vhost=vhost.sprintf({
 			htdocs: serverRoot+servers[server][platform].htdocs,
 			project: form.elements.project.value,
 			domain: form.elements.domain.value,
 			root: form.elements.root.value,
 		});
-		form['content'].value=vhostdefault+vhost;
+		form['content'].value = vhost;
 		setLineNumbers('generator');
 	};

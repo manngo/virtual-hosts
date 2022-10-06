@@ -664,5 +664,41 @@
 		}
 		return show;
 	};
+
+	const fsp = require('fs').promises;
+
+	class JSONFile {
+		constructor(file) {
+			this.file = file;
+		}
+		init(file) {
+			if(file) this.file = file;
+			return fsp.stat(this.file)
+			.catch(() => fsp.writeFile(this.file,'{}'))
+	//		.then(() => fsp.writeFile(this.file,'{"Testingit": "one two"}'))
+			.then(() => fsp.readFile(this.file))
+			.then(json => {
+				this.data = JSON.parse(json);
+			});
+		}
+		clear() {
+			this.data = {};
+			return fsp.writeFile(this.file,'{}');
+		}
+		read() {
+			fsp.readFile(this.file)
+			.then(json => {
+				this.data = JSON.parse(json);
+			});
+		}
+		write(data, clear) {
+			if(clear) this.data = data;
+			else for(let k in data) this.data[k] = data[k];
+	//		fsp.readFile(this.file)
+			return fsp.writeFile(this.file,JSON.stringify(this.data));
+		}
+	}
+
+
 //	Export
-	module.exports={jx,DOM};
+	module.exports = {jx, DOM, JSONFile};

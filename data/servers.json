@@ -1,0 +1,68 @@
+{
+	"hosts": {
+		"darwin": "/etc/hosts",
+		"win32": "C:/Windows/System32/drivers/etc/hosts"
+	},
+	"servers": {
+		"xampp": {
+			"darwin": {
+				"root": "/Applications/XAMPP",
+				"conf": "/etc/httpd.conf",
+				"vhosts": "/xamppfiles/etc/extra/httpd-vhosts.conf",
+				"htdocs": "/xamppfiles/htdocs",
+				"mysql": "/xamppfiles/var/mysql",
+				"phpini": "/xamppfiles/etc/php.ini",
+				"phpmyadmin": "/xamppfiles/phpmyadmin/"
+			},
+			"win32": {
+				"root": "C:/xampp",
+				"conf": "/apache/conf/httpd.conf",
+				"vhosts": "/apache/conf/extra/httpd-vhosts.conf",
+				"htdocs": "/htdocs/",
+				"mysql": "/mysql/data",
+				"phpini": "/php/php.ini",
+				"phpmyadmin": "/phpMyAdmin/"
+			},
+			"vhost": ""
+		},
+		"mamp": {
+			"darwin": {
+				"root": "/Applications/MAMP",
+				"conf": "/conf/apache/httpd.conf",
+				"vhosts": "/conf/apache/extra/httpd-vhosts.conf",
+				"htdocs": "/htdocs",
+				"mysql": "/db/mysql57",
+				"phpini": "/bin/php/php{version}/conf/php.ini",
+				"phpmyadmin": "/bin/phpmyadmin/"
+			},
+			"win32": {
+				"root": "C:/MAMP",
+				"conf": "/conf/apache/httpd.conf",
+				"vhosts": "/bin/apache/conf/extra/httpd-vhosts.conf",
+				"htdocs": "/htdocs/",
+				"mysql": "/db/mysql",
+				"phpmyadmin": "/bin/phpMyAdmin/"
+			},
+			"vhost": ""
+		},
+		"ampps": {
+			"darwin": {
+				"conf": "/Applications/AMPPS/apache/conf/httpd.conf",
+				"vhosts": "/Applications/AMPPS/apache/conf/extra/httpd-vhosts.conf",
+				"htdocs": "/Applications/AMPPS/apache/htdocs",
+				"mysql": "/Applications/AMPPS/var/",
+				"phpini": "/Applications/AMPPS/php/etc/php.ini",
+				"phpmyadmin": "/Applications/AMPPS/phpmyadmin/"
+			},
+			"win32": {
+				"conf": "C:/xampp/apache/conf/httpd.conf",
+				"vhosts": "C:/xampp/apache/conf/extra/httpd-vhosts.conf",
+				"htdocs": "C:/XAMPP/htdocs/",
+				"mysql": "C:/Program Files (x86)/Ampps/mysql/data",
+				"phpini": "/Applications/AMPPS/php/etc/php.ini",
+				"phpmyadmin": "C:/Program Files (x86)/Ampps/phpMyAdmin/"
+			},
+			"vhost": ""
+		}
+	}
+}
