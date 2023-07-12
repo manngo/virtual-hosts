@@ -423,7 +423,8 @@ console.log(`Tab: ${t}\nValue: ${value}\nStatus: ${status}`);
 				}
 			}
 			else {
-				 tabMessage(tab,'Saved','saved');
+				tabs[tab].button.removeAttribute('data-status');
+				tabMessage(tab,'Saved','saved');
 			}
 		});
 	}
@@ -580,9 +581,11 @@ console.log(more);
 		event.preventDefault();
 		if(!server) return;
 		var vhostdefault = form['vhost-default'].checked ? servers[server].vhostdefault+os.EOL+os.EOL : '';
+		vhost=vhost.sprintf({
+			htdocs: serverRoot+servers[server][platform].htdocs
+		});
 		var vhost = vhostdefault+servers[server].vhost;
 		vhost=vhost.sprintf({
-			htdocs: serverRoot+servers[server][platform].htdocs,
 			project: form.elements.project.value,
 			domain: form.elements.domain.value,
 			root: form.elements.root.value,

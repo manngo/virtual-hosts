@@ -3,8 +3,8 @@
 		ServerName [domain]
 		ServerAlias [domain]
 		DocumentRoot "[root]"
-		ErrorLog logs/[project].log
-		CustomLog logs/[project].log combined
+		ErrorLog "logs/[project].log"
+		CustomLog "logs/[project].log" combined
 		<Directory "[root]">
 			Options FollowSymLinks Indexes
 			AllowOverride All
