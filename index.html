@@ -2,17 +2,18 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Edit Virtual Hosts</title>
+		<title>Virtual Hosts</title>
 		<link rel="stylesheet" type="text/css" href="styles/SourceCodePro/SourceCodePro.css">
 		<link rel="stylesheet" type="text/css" href="styles/SourceSansPro/SourceSansPro.css">
 		<link rel="stylesheet" type="text/css" href="styles/SourceSerifPro/SourceSerifPro.css">
 		<link rel="stylesheet" type="text/css" href="styles/main.css">
+		<script type="text/javascript" src="resources/prism/prism.js" crossorigin></script>
 		<script>
 			document.addEventListener('DOMContentLoaded',init);
 			function init() {
 				//	require('./renderer.js');
 				require('./scripts/utilities.js');
-				require('./scripts/edit-virtual-hosts.js');
+				require('./scripts/virtual-hosts.js');
 				//	require('./scripts/do-virtual-hosts.js');
 				//	alert('hello')
 			}
@@ -21,6 +22,7 @@
 	<body>
 		<form id="controls">
 			<div id="tabs">
+				<button value="settings">Settings</button>
 				<button value="hosts-file">hosts File</button>
 				<button value="httpd-conf">httpd.conf</button>
 				<button value="virtual-hosts">Virtual Hosts</button>
@@ -28,22 +30,48 @@
 				<button value="php-ini">php.ini</button>
 				<button value="misc-text">File</button>
 				<button value="misc-actions">Actions</button>
-			</div>
-			<div id="choose-server-root">
-				<label for="server-root">Server Root</label>
-				<input type="text" id="server-root" name="server-root" value="" placeholder="Leave empty for default" title="Full Path to Server Folder">
-				<button name="server-path">Select Folder …</button>
-			</div>
-			<div id="misc">
-				<select name="server" size="1">
-					<option value="">Choose One …</option>
-					<option value="xampp">XAMPP</option>
-					<option value="mamp">MAMP</option>
-					<!--option value="ampps">AMPPS</option-->
-				</select>
+				<button value="php-runner">PHP Runner</button>
 			</div>
 		</form>
 		<div id="forms">
+			<form id="settings">
+				<div class="help">
+					<h3>Virtual Host Settings</h3>
+					<ol>
+						<li>Choose a Web Server Package</li>
+						<li>If you have installed the Web Server in a non-default location, select the folder.</li>
+						<li>If you prefer to use a different PHP Interpreter, choose the alternative interpreter executable.</li>
+					</ol>
+				</div>
+				<div id="misc">
+					<h4>Choose a Web Server Package</h4>
+					<select name="server">
+						<option value="">Choose One …</option>
+						<option value="xampp">XAMPP</option>
+						<option value="mamp">MAMP</option>
+						<!--option value="ampps">AMPPS</option-->
+					</select>
+					<p>Note: When you select a server, the Web Server Root Folder and the PHP Interpreter below will be reset to the default for the server.</p>
+				</div>
+				<div id="choose-server-root">
+					<h4>Choose a Web Server Root Folder</h4>
+					<!--
+						<label for="server-root">Server Root</label>
+						<input type="text" id="server-root" name="server-root" value="" placeholder="Leave empty for default" title="Full Path to Server Folder">
+					-->
+					<output type="text" name="server-root" value="" placeholder="Leave empty for default" title="Full Path to Server Folder"></output>
+					<button name="server-path">Select Folder …</button>
+				</div>
+				<div id="choose-php-interpreter">
+					<h4>Choose a PHP Interpreter</h4>
+					<!--
+						<label for="php-interpreter">Server Root</label>
+						<input type="text" id="php-interpreter" name="php-interpreter" value="" placeholder="Leave empty for default" title="Full Path to PHP Interpreter">
+					-->
+					<output name="php-interpreter" value="" placeholder="Leave empty for default" title="Full Path to PHP Interpreter"></output>
+					<button name="php-interpreter-path">Select Interpreter …</button>
+				</div>
+			</form>
 			<form id="hosts-file">
 				<div class="help">
 					<h3>Hosts File (etc/host)</h3>
@@ -143,8 +171,27 @@
 				</div>
 				<div class="etc">
 					<p><button type="button" name="reset-mysql">Reset MySQL</button></p>
-					<p><button type="button" name="phpmyadmin-css">PHPMyAdmin CSS</button></p>
-					<p><button type="button" name="phpmyadmin-config">PHPMyAdmin Config</button></p>
+					<p><button type="button" name="phpmyadmin-css">PHPMyAdmin CSS</button><button type="button" name="phpmyadmin-css-append">Append CSS Settings</button></p>
+					<p><button type="button" name="phpmyadmin-config">PHPMyAdmin Config</button><button type="button" name="phpmyadmin-config-pappend">Append Config Settings</button></p>
+				</div>
+			</form>
+			<form id="php-runner">
+				<div class="help" id="php-help">
+					<h3>PHP Runner</h3>
+				</div>
+				<div id="php-code">
+					<textarea name="code" placeholder="Enter your PHP"></textarea>
+					<code class="language-php" contenteditable="true">Content</code>
+					<button name="doit">Run</button>
+				</div>
+<!--
+				<div id="php-control">
+					<label><input type="checkbox" name="html"> HTML Mode</label>
+					<button name="doit">Run</button>
+				</div>
+-->
+				<div id="php-result">
+
 				</div>
 			</form>
 		</div>

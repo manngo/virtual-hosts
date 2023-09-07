@@ -12,7 +12,8 @@
 				"htdocs": "/xamppfiles/htdocs",
 				"mysql": "/xamppfiles/var/mysql",
 				"phpini": "/xamppfiles/etc/php.ini",
-				"phpmyadmin": "/xamppfiles/phpmyadmin/"
+				"phpmyadmin": "/xamppfiles/phpmyadmin/",
+				"phpcli": "/xamppfiles/bin/php"
 			},
 			"win32": {
 				"root": "C:/xampp",
@@ -21,7 +22,8 @@
 				"htdocs": "/htdocs/",
 				"mysql": "/mysql/data",
 				"phpini": "/php/php.ini",
-				"phpmyadmin": "/phpMyAdmin/"
+				"phpmyadmin": "/phpMyAdmin/",
+				"phpcli": "/php/php.exe"
 			},
 			"vhost": ""
 		},
@@ -33,7 +35,8 @@
 				"htdocs": "/htdocs",
 				"mysql": "/db/mysql57",
 				"phpini": "/bin/php/php{version}/conf/php.ini",
-				"phpmyadmin": "/bin/phpmyadmin/"
+				"phpmyadmin": "/bin/phpmyadmin/",
+				"phpcli": "/bin/php/php{version}/bin/php"
 			},
 			"win32": {
 				"root": "C:/MAMP",
@@ -41,7 +44,9 @@
 				"vhosts": "/bin/apache/conf/extra/httpd-vhosts.conf",
 				"htdocs": "/htdocs/",
 				"mysql": "/db/mysql",
-				"phpmyadmin": "/bin/phpMyAdmin/"
+				"phpini": "/conf/php{version}/php.ini",
+				"phpmyadmin": "/bin/phpMyAdmin/",
+				"phpcli": "/bin/php/php{version}/php.exe"
 			},
 			"vhost": ""
 		},

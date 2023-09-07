@@ -4,7 +4,7 @@
 //	const { dialog } = require('electron').remote;
 	const { ipcRenderer, shell} = require('electron');
 
-	var editHosts=require('./edit-virtual-hosts.js');
+	var editHosts=require('./virtual-hosts.js');
 	var {os,hosts,servers,setLineNumbers,platform,test,server}=editHosts;
 
 	doVirtualHosts();

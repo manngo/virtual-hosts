@@ -24,7 +24,7 @@
 
 	menu=[
         {
-            label: 'Edit Virtual Hosts',
+            label: 'Virtual Hosts',
             submenu: [
                 {	label: `New Document`, accelerator: 'CmdOrCtrl+N', id:'NEW', click: send },
                 {	label: `Open …`, accelerator: 'CmdOrCtrl+O', id:'OPEN', click: send },
@@ -56,7 +56,7 @@
 				{	label: 'About …', id: 'ABOUT', click: send },
 				{	label: 'Instructions …', id: 'INSTRUCTIONS', click: send },
 				{	type:'separator' },
-				{	label: 'Edit Virtual Hosts Home', icon: path.join(__dirname, 'images/external.png'), click: () => { shell.openExternal('https://github.com/manngo/edit-virtual-hosts'); } },
+				{	label: 'Virtual Hosts Home', icon: path.join(__dirname, 'images/external.png'), click: () => { shell.openExternal('https://github.com/manngo/virtual-hosts'); } },
 				{	label: 'Internotes Virtual Hosts', icon: path.join(__dirname,'images/external.png'), click: () => { shell.openExternal('https://www.internotes.net/virtual-hosts'); } },
 				{	id: 'debug-separator', type:'separator' },
 				{	id: 'debug-developer-tools', accelerator: 'CmdOrCtrl+Shift+I', label: 'Show Development Tools', click: function (menuItem, focusedWindow) { window.webContents.openDevTools({mode: 'detach'}); } },
@@ -96,7 +96,7 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 			window.show();
 		});
 
-		window.setTitle('Edit Virtual Hosts');
+		window.setTitle('Virtual Hosts');
 		menu=Menu.buildFromTemplate(menu);
 
 		Menu.setApplicationMenu(menu);
@@ -136,9 +136,13 @@ if(DEVELOPMENT) 	menu=menu.concat(developmentMenu);
 	    });
 	}
 
-	ipcMain.on('home',(event,options)=>{
+	ipcMain.on('home',(event,options) => {
 		var home=`${app.getPath('home')}`;
 		event.returnValue = home;
+	});
+	ipcMain.on('init',(event,data) => {
+		var home = `${app.getPath('home')}`;
+		event.returnValue = JSON.stringify({home});
 	});
 	ipcMain.on('app-path',(event,options)=>{
 		var home=`${app.getAppPath()}`;

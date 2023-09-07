@@ -198,35 +198,6 @@
 		border-bottom: medium solid var(--tabs-button-status-edited-border-color);
 	}
 
-	form#controls>div#misc>select {
-		color: var(--misc-select-color);
-		background-color: var(--misc-select-background-color);
-		border: thin solid var(--misc-select-border-color);
-		font-size: .9rem;
-		-webkit-appearance: none;
-		appearance: none;
-		padding: .125rem .25rem;
-		border-radius: 0;
-		outline: none;
-		width: 8em;
-
-		font-family: var(--sans-serif);
-		text-shadow: var(--misc-select-text-shadow);
-		font-size: .9rem;
-
-		margin: .125rem;
-	}
-
-	form#controls>div#misc>select>option {
-		background-color: var(--misc-select-option-color);
-	}
-
-	form#qcontrols>div#misc>select:before {
-		content: "*";
-	}
-	form#qcontrols>div#misc>select>option:before {
-		content: "qqqq";
-	}
 
 /*	Search
 	================================================ */
@@ -303,7 +274,7 @@
 	form {
 	}
 
-	div#forms form textarea[name="content"] {
+	div#forms form :is(textarea[name="content"],textarea[name="code"]) {
 		padding: 1em;
 		tab-size: 4;
 		-moz-tab-size: 4;
@@ -326,7 +297,7 @@
 
 	}
 
-	form textarea[name="content"],
+	form :is(textarea[name="content"],textarea[name="code"]),
 	div.line-numbers {
 		font-family: var(--monospace);
 		font-size: .9rem;
@@ -415,7 +386,7 @@
 	div#generated {
 		qdisplay: flex;
 	}
-	div#forms form#generator textarea[name="content"] {
+	div#forms form#generator :is(textarea[name="content"],textarea[name="code"]) {
 		resize: none;
 		height: 100%;
 	}
@@ -538,6 +509,9 @@
 
 	form#misc-actions div.etc p {
 		margin: .25em 0;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		width: 32em;
 	}
 	form#misc-actions div.etc p>button {
 		color: var(--misc-action-button-color);
@@ -547,8 +521,212 @@
 		font-size: 1em;
 		padding: .5em 1em;
 		text-align: left;
-		width: 100%;
+		qwidth: 100%;
 	}
+	form#misc-actions div.etc p>button:only-child {
+		grid-column: 1/3;
+	}
+	form#misc-actions div.etc p>button:nth-child(n+2) {
+		border-left: none;
+	}
+
 	form#misc-actions div.etc p>button:hover {
 		background-color: var(--misc-action-button-hover-background-color);
+	}
+
+/*	PHP Runner
+	================================================
+	form#php-runner">
+		div#php-help.help
+			h3
+		div#php-code
+			textarea[name="code"]
+			code.language-php
+		div#php-control
+			label
+				input[name="html"]
+			button[name="doit"]
+		div#php-result
+			output[name="result"]
+
+	================================================ */
+
+	div#forms form#php-runner {
+		display: grid;
+		grid-template-rows: auto 1fr 1fr;
+		grid-template-columns: 1fr;
+	}
+
+	div#forms form#php-runner * {
+		box-sizing: border-box;
+	}
+
+	div#forms form#php-runner>div#php-help {
+		grid-column: 1/2;
+		grid-row: 1/2;
+	}
+	div#forms form#php-runner>div#php-code {
+		box-sizing: border-box;
+
+		grid-column: 1/2;
+		grid-row: 2/3;
+		display: grid;
+		grid-template-rows: 1fr;
+		grid-template-columns: 6em 1fr;
+
+		position: relative;
+	}
+	div#forms form#php-runner>div#php-control {
+		backgroiund-color: #f8f8f8;
+		border: thin #666;
+		border-style: solid none;
+		padding: 0.5em 1em;
+		grid-column: 1/2;
+		grid-row: 3/4;
+
+	}
+
+	div#forms form#php-runner>div#php-control>label {
+		border: thick solid red;
+		display: none;
+	}
+
+	div#forms form#php-runner>div#php-code>button[name="doit"] {
+		background-color: darkgreen;
+		color: white;
+		padding: 0.5em 1em;
+		border: darkgreen thin solid;
+		display: inline-block;
+		width: 6em;
+		box-sizing: border-box;
+		position: absolute;
+		font-size: 1.2em;
+		right: 0.5em;
+		bottom: 0.5em;
+	}
+	div#forms form#php-runner>div#php-control>button[name="doit"] {
+		-margin-left: 4em;
+		background-color: darkgreen;
+		color: white;
+		padding: 0.5em 1em;
+		border: darkgreen thin solid;
+		display: inline-block;
+		qwidth: 6em;
+		box-sizing: border-box;
+	}
+
+	div#forms form#php-runner>div#php-result {
+		grid-column: 1/2;
+		grid-row: 3/4;
+	}
+
+	div#forms form#php-runner>div#php-code>code {
+		display: none;
+	}
+
+	div#forms form#php-runner>div#php-code :is(div.line-numbers,textarea) {
+		white-space: pre;
+		font-family: "Source Code Pro";
+		font-size: 1.2em;
+	}
+
+	div#forms form#php-runner>div#php-code>div.line-numbers {
+		grid-column: 1/2;
+		grid-row: 1/2;
+		padding: 0.25em 0.5em 0 0;
+		text-align: right;
+	}
+	div#forms form#php-runner>div#php-code>textarea {
+		padding: 0.25em 0.5em 0 0.75em;
+		grid-column: 2/3;
+	}
+	div#forms form#php-runner code {
+		grid-column: 2/3;
+		grid-row: 1/2;
+	}
+	div#forms form#php-runner>div#php-result {
+		box-sizing: border-box;
+		font-family: "Source Code Pro";
+		font-size: 1.2em;
+		white-space: pre;
+		padding: 1em;
+		background-color: white;
+		border: 0.5em solid #ddd;
+	}
+/*	Settings
+	================================================
+	div#forms form#settings
+		div.help
+			h3
+			ol
+		div#choose-server-root
+			output[name="server-root"]
+			button[name="server-path"
+		div#misc
+			p
+			select[name="server"]
+		div#choose-php-interpreter
+			p
+			output[name="php-interpreter"]
+			button[name="php-interpreter-path"]
+	================================================ */
+
+	div#forms form#settings {
+		grid-template-columns: 1fr;
+		grid-template-rows: auto auto auto auto 1fr;
+	}
+
+	div#forms form#settings :is(div#choose-server-root,div#misc,div#choose-php-interpreter) {
+		padding: 1em 1em;
+		border: thin solid #666;
+		border-style: none none solid none;
+	}
+
+	div#forms form#settings h4 {
+		font-weight: bold;
+		qpadding: 0.5em 0.75em;
+		margin: 0 0 0.5em 0;
+	}
+	div#forms form#settings output {
+		display: block;
+		box-sizing: content-box;
+		height: 1em;
+		border: thin solid #999;
+		font-family: "Source Code Pro";
+		padding: 0.5em 0.75em;
+		margin: 0 0 0.5em 0;
+	}
+	div#forms form#settings button {
+		font-size: 1em;
+		padding: 0.5em 0.75em;
+		margin: 0 0 0.5em 0;
+		border: thin solid #eee;
+		background-color: #eee;
+	}
+	div#forms form#settings button:hover {
+		border: thin solid #ddd;
+		background-color: #ddd;
+	}
+
+	div#forms form#settings>div#misc>select {
+		color: var(--misc-select-color);
+		background-color: var(--misc-select-background-color);
+		border: thin solid var(--misc-select-border-color);
+		font-size: .9rem;
+		-webkit-appearance: none;
+		appearance: none;
+		padding: .125rem .25rem;
+		border-radius: 0;
+		outline: none;
+		width: 8em;
+
+		font-family: var(--sans-serif);
+		text-shadow: var(--misc-select-text-shadow);
+		font-size: .9rem;
+
+		margin: .125rem;
+	}
+
+	div#forms form#settings>div#misc>select>option {
+		background-color: var(--misc-select-option-color);
 	}

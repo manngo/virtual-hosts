@@ -1,9 +1,9 @@
 {
-	"name": "edit-virtual-hosts",
-	"version": "0.6.4",
-	"description": "Edit Virtual Hosts",
+	"name": "virtual-hosts",
+	"version": "0.7.0",
+	"description": "Virtual Hosts",
 	"main": "main.js",
-	"repository": "https://github.com/manngo/edit-virtual-hosts",
+	"repository": "https://github.com/manngo/virtual-hosts",
 	"keywords": [],
 	"author": "Mark Simon",
 	"license": "CC0-1.0",
@@ -16,9 +16,9 @@
 		"sudo-prompt": "^9.0.0",
 		"temp": "^0.9.0"
 	},
-	"productName": "Edit Virtual Hosts",
+	"productName": "Virtual Hosts",
 	"build": {
-		"appId": "com.webcraft101.edit-virtual-hosts",
+		"appId": "com.webcraft101.virtual-hosts",
 		"mac": {
 			"category": "public.app-category.developer-tools",
 			"target": [
@@ -26,7 +26,7 @@
 				"dmg",
 				"dir"
 			],
-			"icon": "images/edit-virtual-hosts.icns"
+			"icon": "images/virtual-hosts.icns"
 		},
 		"win": {
 			"target": [
@@ -34,7 +34,7 @@
 				"nsis",
 				"portable"
 			],
-			"icon": "images/edit-virtual-hosts.ico"
+			"icon": "images/virtual-hosts.ico"
 		},
 		"nsis": {
 			"oneClick": false,

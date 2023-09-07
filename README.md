@@ -1,6 +1,6 @@
-# Edit Virtual Hosts
+# Virtual Hosts
 
-Get the latest version from here: [https://github.com/manngo/edit-virtual-hosts/releases/latest](https://github.com/manngo/edit-virtual-hosts/releases/latest).
+Get the latest version from here: [https://github.com/manngo/virtual-hosts/releases/latest](https://github.com/manngo/virtual-hosts/releases/latest).
 
 ## Introduction
 

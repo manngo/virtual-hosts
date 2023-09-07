@@ -16,10 +16,10 @@ function init() {
 			nodeIntegration: true
 		}
 	});
-	window.setTitle('Edit Virtual Hosts');
+	window.setTitle('Virtual Hosts');
 	var menuTemplate=[
         {
-            label: 'Edit Virtual Hosts',
+            label: 'Virtual Hosts',
             submenu: [
                 {
                     label: `Open …`,
