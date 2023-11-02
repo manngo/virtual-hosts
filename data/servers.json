@@ -13,7 +13,8 @@
 				"mysql": "/xamppfiles/var/mysql",
 				"phpini": "/xamppfiles/etc/php.ini",
 				"phpmyadmin": "/xamppfiles/phpmyadmin/",
-				"phpcli": "/xamppfiles/bin/php"
+				"phpcli": "/xamppfiles/bin/php",
+				"phpmyadmin-config": "//\tAdditional Settings\n\t$cfg['AllowUserDropDatabase'] = true;\n\t$cfg['RetainQueryBox'] = true;\n"
 			},
 			"win32": {
 				"root": "C:/xampp",
@@ -23,9 +24,11 @@
 				"mysql": "/mysql/data",
 				"phpini": "/php/php.ini",
 				"phpmyadmin": "/phpMyAdmin/",
-				"phpcli": "/php/php.exe"
+				"phpcli": "/php/php.exe",
+				"phpmyadmin-config": "<?php\n\t//\tAdditional Settings\n\t\t$cfg['AllowUserDropDatabase'] = true;\n\t\t$cfg['RetainQueryBox'] = true;\n?>\n"
 			},
-			"vhost": ""
+			"vhost": "",
+			"phpmyadmin-css": "/*\tAdditional Settings\n\t================================================ */\n\tform#sqlqueryform div.CodeMirror pre,\n\tform#sqlqueryform div.CodeMirror-linenumber {\n\t\tfont-size: 1.25rem;\n\t}\n"
 		},
 		"mamp": {
 			"darwin": {
@@ -36,7 +39,8 @@
 				"mysql": "/db/mysql57",
 				"phpini": "/bin/php/php{version}/conf/php.ini",
 				"phpmyadmin": "/bin/phpmyadmin/",
-				"phpcli": "/bin/php/php{version}/bin/php"
+				"phpcli": "/bin/php/php{version}/bin/php",
+				"phpmyadmin-config": "<?php\n\t//\tAdditional Settings\n\t\t$cfg['AllowUserDropDatabase'] = true;\n\t\t$cfg['RetainQueryBox'] = true;\n?>\n"
 			},
 			"win32": {
 				"root": "C:/MAMP",
@@ -46,9 +50,11 @@
 				"mysql": "/db/mysql",
 				"phpini": "/conf/php{version}/php.ini",
 				"phpmyadmin": "/bin/phpMyAdmin/",
-				"phpcli": "/bin/php/php{version}/php.exe"
+				"phpcli": "/bin/php/php{version}/php.exe",
+				"phpmyadmin-config": "<?php\n\t//\tAdditional Settings\n\t\t$cfg['AllowUserDropDatabase'] = true;\n\t\t$cfg['RetainQueryBox'] = true;\n?>\n"
 			},
-			"vhost": ""
+			"vhost": "",
+			"phpmyadmin-css": "/*\tAdditional Settings\n\t================================================ */\n\tform#sqlqueryform div.CodeMirror pre,\n\tform#sqlqueryform div.CodeMirror-linenumber {\n\t\tfont-size: 1.25rem;\n\t}\n"
 		},
 		"ampps": {
 			"darwin": {

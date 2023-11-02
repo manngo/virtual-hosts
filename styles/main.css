@@ -70,8 +70,8 @@
 		box-sizing: border-box;
 		padding: 0;
 		margin: 0;
-		height: 100vh;
-		width: 100vw;
+		qheight: 100vh;
+		qwidth: 100vw;
 		font-size: 100%;
 	}
 
@@ -96,14 +96,19 @@
 	================================================ */
 
 	body {
-		display: flex;
-		flex-direction: column;
+		display: grid;
 		overflow: hidden;
+		grid-template-rows: auto 1fr auto auto;
+		grid-template-columns: 1fr;
+		box-sizing: border-box;
+		height: 100vh;
 	}
+
 
 	form#controls {
 		qflex: 1;
 		display: flex;
+		grid-row: 1/2;
 	}
 	form#controls>div#tabs {
 
@@ -116,7 +121,8 @@
 	}
 
 	div#forms {
-		flex: 1;
+		grid-row: 2/3;
+		overflow: auto;
 	}
 	div#forms>form {
 		font-family: var(--sans-serif);
@@ -131,6 +137,7 @@
 
 	footer {
 		qflex: 1;
+		grid-row: 4/5;
 	}
 
 /*	Forms
@@ -138,7 +145,8 @@
 
 	div#forms {
 		box-sizing: border-box;
-		height: calc(100vh - 14em);
+		qheight: calc(100vh - 14em);
+		qheight: 20em;
 	}
 	div#forms form {
 		box-sizing: border-box;
@@ -160,7 +168,7 @@
 
 	form#controls {
 		background: linear-gradient(to bottom, #f8f8f8, #ccc);
-		height: 30px;
+		qheight: 30px;
 		padding: 0;
 		box-sizing: border-box;
 		display: flex;
@@ -399,6 +407,19 @@
 		outline: none;
 	}
 
+div#forms form#generator {
+	grid-template-columns: 24em 1fr;
+}
+div#forms form#generator input[type="text"] {
+	padding: .25rem .25rem;
+}
+div#forms form#generator div.line-numbers {
+	width: 3em !important
+}
+form#generator textarea {
+	padding-left: 0.5em !important;
+}
+
 /*	php.ini
 	================================================ */
 
@@ -534,125 +555,142 @@
 		background-color: var(--misc-action-button-hover-background-color);
 	}
 
-/*	PHP Runner
-	================================================
-	form#php-runner">
-		div#php-help.help
-			h3
-		div#php-code
-			textarea[name="code"]
-			code.language-php
-		div#php-control
-			label
-				input[name="html"]
-			button[name="doit"]
-		div#php-result
-			output[name="result"]
+	/*	PHP Runner
+		================================================
+		form#php-runner">
+			div#php-help.help
+				h3
+			div#php-code
+				textarea[name="code"]
+				code.language-php
+				div#php-control
+					label
+						input[name="html"]
+					button[name="doit"]
+			div#php-result
+				output[name="result"]
+		================================================ */
 
-	================================================ */
+		div#forms form#php-runner {
+			/* display: grid; */
+			grid-template-rows: auto 1fr 1fr;
+			grid-template-columns: 1fr;
+		}
 
-	div#forms form#php-runner {
-		display: grid;
-		grid-template-rows: auto 1fr 1fr;
-		grid-template-columns: 1fr;
-	}
+		div#forms form#php-runner * {
+			box-sizing: border-box;
+		}
 
-	div#forms form#php-runner * {
-		box-sizing: border-box;
-	}
+		div#forms form#php-runner>div#php-help {
+			grid-column: 1/2;
+			grid-row: 1/2;
+		}
+		div#forms form#php-runner>div#php-code {
+			box-sizing: border-box;
 
-	div#forms form#php-runner>div#php-help {
-		grid-column: 1/2;
-		grid-row: 1/2;
-	}
-	div#forms form#php-runner>div#php-code {
-		box-sizing: border-box;
+			grid-column: 1/2;
+			grid-row: 2/3;
+			display: grid;
+			grid-template-rows: 1fr;
+			grid-template-columns: 6em 1fr;
 
-		grid-column: 1/2;
-		grid-row: 2/3;
-		display: grid;
-		grid-template-rows: 1fr;
-		grid-template-columns: 6em 1fr;
+			position: relative;
+			overflow: scroll;
+		}
 
-		position: relative;
-	}
-	div#forms form#php-runner>div#php-control {
-		backgroiund-color: #f8f8f8;
-		border: thin #666;
-		border-style: solid none;
-		padding: 0.5em 1em;
-		grid-column: 1/2;
-		grid-row: 3/4;
+		div#forms form#php-runner>:is(div#php-result, div#php-code) {
+			overflow: scroll;
+		}
 
-	}
+		qdiv#forms form#php-runner div#php-control {
+			backgroind-color: #f8f8f8;
+			border: thin #666;
+			border-style: solid none;
+			padding: 0.5em 1em;
+			grid-column: 1/2;
+			grid-row: 3/4;
 
-	div#forms form#php-runner>div#php-control>label {
-		border: thick solid red;
-		display: none;
-	}
+		}
 
-	div#forms form#php-runner>div#php-code>button[name="doit"] {
-		background-color: darkgreen;
-		color: white;
-		padding: 0.5em 1em;
-		border: darkgreen thin solid;
-		display: inline-block;
-		width: 6em;
-		box-sizing: border-box;
-		position: absolute;
-		font-size: 1.2em;
-		right: 0.5em;
-		bottom: 0.5em;
-	}
-	div#forms form#php-runner>div#php-control>button[name="doit"] {
-		-margin-left: 4em;
-		background-color: darkgreen;
-		color: white;
-		padding: 0.5em 1em;
-		border: darkgreen thin solid;
-		display: inline-block;
-		qwidth: 6em;
-		box-sizing: border-box;
-	}
+		div#forms form#php-runner div#php-control {
+			position: absolute;
+			background-color: darkgreen;
+			right: 2em;
+			bottom: 1em;
+			padding: 0.25em 0.75em;
+			opacity: 0.25;
+			transition: opacity 0.25s;
+		}
 
-	div#forms form#php-runner>div#php-result {
-		grid-column: 1/2;
-		grid-row: 3/4;
-	}
+		div#forms form#php-runner div#php-code button[name="doit"] {
+			background-color: darkgreen;
+			color: white;
+			padding: 0.5em 1em;
+			border: darkgreen thin solid;
+			display: inline-block;
+			width: 6em;
+			box-sizing: border-box;
+			font-size: 1.2em;
+			opacity: 0.25;
+			transition: opacity 0.25s;
+		}
+		div#forms form#php-runner div#php-control:hover {
+			opacity: 1;
+		}
+		div#forms form#php-runner div#php-control button[name="doit"]:hover {
+			opacity: 1;
+		}
 
-	div#forms form#php-runner>div#php-code>code {
-		display: none;
-	}
+		div#forms form#php-runner div#php-control label {
+			background-color: white;
+			padding: 0.25em 0.5em;
+		}
 
-	div#forms form#php-runner>div#php-code :is(div.line-numbers,textarea) {
-		white-space: pre;
-		font-family: "Source Code Pro";
-		font-size: 1.2em;
-	}
+		div#forms form#php-runner div#php-control input[type="checkbox"] {
+			accent-color: darkgreen;
+		}
 
-	div#forms form#php-runner>div#php-code>div.line-numbers {
-		grid-column: 1/2;
-		grid-row: 1/2;
-		padding: 0.25em 0.5em 0 0;
-		text-align: right;
-	}
-	div#forms form#php-runner>div#php-code>textarea {
-		padding: 0.25em 0.5em 0 0.75em;
-		grid-column: 2/3;
-	}
-	div#forms form#php-runner code {
-		grid-column: 2/3;
-		grid-row: 1/2;
-	}
-	div#forms form#php-runner>div#php-result {
-		box-sizing: border-box;
-		font-family: "Source Code Pro";
-		font-size: 1.2em;
-		white-space: pre;
-		padding: 1em;
-		background-color: white;
-		border: 0.5em solid #ddd;
-	}
+		div#forms form#php-runner>div#php-result {
+			grid-column: 1/2;
+			grid-row: 3/4;
+			overflow: scroll;
+		}
+
+		div#forms form#php-runner>div#php-code>code {
+			display: none;
+		}
+
+		div#forms form#php-runner>div#php-code :is(div.line-numbers,textarea) {
+			white-space: pre;
+			font-family: "Source Code Pro";
+			font-size: 1.2em;
+		}
+
+		div#forms form#php-runner>div#php-code>div.line-numbers {
+			grid-column: 1/2;
+			grid-row: 1/2;
+			padding: 0.25em 0.375em 0 0;
+			text-align: right;
+			width: 4.5em;
+		}
+		div#forms form#php-runner>div#php-code>textarea {
+			padding: 0.25em 0.5em 0 0.25em;
+			grid-column: 2/3;
+		}
+		div#forms form#php-runner code {
+			grid-column: 2/3;
+			grid-row: 1/2;
+		}
+		div#forms form#php-runner>div#php-result {
+			box-sizing: border-box;
+			font-family: "Source Code Pro";
+			font-size: 1.2em;
+			white-space: pre;
+			padding: 1em;
+			background-color: white;
+			border: 0.5em solid #ddd;
+		}
+
 /*	Settings
 	================================================
 	div#forms form#settings
@@ -673,7 +711,7 @@
 
 	div#forms form#settings {
 		grid-template-columns: 1fr;
-		grid-template-rows: auto auto auto auto 1fr;
+		grid-template-rows: auto auto auto auto auto 1fr;
 	}
 
 	div#forms form#settings :is(div#choose-server-root,div#misc,div#choose-php-interpreter) {
@@ -729,4 +767,13 @@
 
 	div#forms form#settings>div#misc>select>option {
 		background-color: var(--misc-select-option-color);
+	}
+	div#forms form#settings>div#save-settings {
+		padding: 1em;
+	}
+	div#forms form#settings>div#save-settings>button {
+		background-color: darkgreen;
+		color: white;
+		width: 8em;
+		float: right;
 	}

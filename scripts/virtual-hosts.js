@@ -112,24 +112,24 @@
 
 			for(let f of forms) {
 				if(f.elements['content']){
-					tabs[f.id].content=f.elements['content'];
-					f.elements['content'].onkeydown=handleTab;
-					f.elements['content'].oninput=function(event) {
+					tabs[f.id].content = f.elements['content'];
+					f.elements['content'].onkeydown = handleTab;
+					f.elements['content'].oninput = event => {
 						tabs[tab].button.setAttribute('data-status','edited');
 						tabMessage(tab,'Edited','edited');
 					};
-					f.elements['content'].onblur=function(event) {
-						searchData.fromIndex=this.selectionStart;
+					f.elements['content'].onblur = function(event) {
+						searchData.fromIndex = this.selectionStart;
 					};
 
-					var lineNumbers=document.createElement('div');
+					var lineNumbers = document.createElement('div');
 					lineNumbers.classList.add('line-numbers');
-					tabs[f.id].lineNumbers=lineNumbers;
+					tabs[f.id].lineNumbers = lineNumbers;
 					tabs[f.id].content.insertAdjacentElement('beforebegin',lineNumbers);
-					tabs[f.id].content.onscroll=function(event) {
-						tabs[f.id].lineNumbers.scrollTop=this.scrollTop;
+					tabs[f.id].content.onscroll = function(event) {
+						tabs[f.id].lineNumbers.scrollTop = this.scrollTop;
 					};
-					tabs[f.id].content.addEventListener('input',function(event) {
+					tabs[f.id].content.addEventListener('input', event => {
 						setLineNumbers(f.id);
 					});
 					setLineNumbers(f.id);
@@ -165,12 +165,7 @@
 				;
 
 			//	Server Menu
-				forms['settings'].elements['server'].addEventListener('change', event => {
-					server = event.target.value;
-					jf.write({ server: forms['settings'].elements['server'].value});
-
-					//	TODO: Verify change if data-status is unsaved
-
+				function chooseServer(server) {
 					tabs['php-ini'].button.removeAttribute('data-status');
 					tabs['httpd-conf'].button.removeAttribute('data-status');
 					tabs['virtual-hosts'].button.removeAttribute('data-status');
@@ -192,8 +187,12 @@
 
 						forms['settings'].elements['server-root'].value = '';
 						forms['settings'].elements['php-interpreter'].value = '';
+					}
+
 				}
-					//	module.exports.server=server;
+				forms['settings'].elements['server'].addEventListener('change', event => {
+					server = event.target.value;
+					chooseServer(server);
 				});
 
 			//	On select server
@@ -203,13 +202,15 @@
 					fsp.access(serverRoot)
 					.then(() => load('httpd-conf'))
 					.then(data => {
-						let phpini = serverRoot+servers[server][platform]['phpini'];
-						if(!phpcli) phpcli = serverRoot+servers[server][platform]['phpcli'];
+						let phpini = `${serverRoot}${servers[server][platform]['phpini']}`;
+						if(!phpcli) phpcli = `${serverRoot}${servers[server][platform]['phpcli']}`;
 						let pattern = /php(\d\.\d+\.\d+)/;
 						let version = data.match(pattern);
 						if(version && phpini.match('{version}')) {
 							phpini = phpini.replace('{version}',version[1]);
 							phpcli = phpcli.replace('{version}',version[1]);
+							servers[server][platform]['phpini'] = phpini;
+							servers[server][platform]['phpcli'] = phpcli;
 						}
 
 						tabs['php-ini'].path = phpini;
@@ -254,12 +255,16 @@
 					forms['settings'].elements['server-root'].value = path;
 					localStorage.setItem('serverPath',path);
 					//	forms['settings'].elements['server'].value = '';
-					jf.write({
-						"server-root": forms['settings'].elements['server-root'].value,
-						server: ''
-					});
 					setServer(path);
 				});
+				forms['settings'].elements['server-path-default'].onclick = event => {	//	button
+					event.preventDefault();
+					if(server) {
+						forms['settings'].elements['server-root'].value = servers[server][platform]['root'];
+						localStorage.setItem('serverPath',servers[server][platform]['root']);
+						setServer(servers[server][platform]['root']);
+					}
+				};
 
 			//	PHP Interpreter Button
 				forms['settings'].elements['php-interpreter-path'].onclick = event => {	//	button
@@ -275,12 +280,25 @@
 					forms['settings'].elements['php-interpreter'].value = path;
 					tabs['php-runner'].path = path;
 					localStorage.setItem('phpInterpreterPath',path);
-					jf.write({
-						"server-root": forms['settings'].elements['server-root'].value,
-						"php-interpreter": forms['settings'].elements['php-interpreter'].value,
-						server: ''
-					});
 				});
+				forms['settings'].elements['php-interpreter-path-default'].onclick = event => {	//	button
+					event.preventDefault();
+					if(server) {
+						forms['settings'].elements['php-interpreter'].value = servers[server][platform]['phpcli'];
+						tabs['php-runner'].path = servers[server][platform]['phpcli'];
+						localStorage.setItem('phpInterpreterPath',servers[server][platform]['phpcli']);
+					}
+				};
+
+			//	Save Settings
+				forms['settings'].elements['save-settings'].onclick = event => {	//	button
+					event.preventDefault();
+					jf.write({
+						"server": forms['settings'].elements['server'].value,
+						"server-root": forms['settings'].elements['server-root'].value,
+						"php-interpreter": forms['settings'].elements['php-interpreter'].value
+					});
+				};
 
 		/*	Special Actions
 			================================================ */
@@ -318,7 +336,7 @@
 					case 'win32':	//	tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/themes/pmahomme/css/theme.css`; break;
 					default:	tabs['misc-text'].path=`${serverRoot}${servers[server][platform]['phpmyadmin']}/js/vendor/codemirror/lib/codemirror.css`;
 				}
-				load('misc-text', 'form#sqlqueryform div.CodeMirror pre,\nform#sqlqueryform div.CodeMirror-linenumber {\n\tfont-size: 1.25rem;\n}\n');
+				load('misc-text', servers[server]['phpmyadmin-css']);
 				buttons['misc-text'].click();
 			};
 			miscActions.elements['phpmyadmin-config'].onclick=function(event) {
@@ -327,10 +345,10 @@
 				load('misc-text');
 				buttons['misc-text'].click();
 			};
-			miscActions.elements['phpmyadmin-config-pappend'].onclick=function(event) {
+			miscActions.elements['phpmyadmin-config-append'].onclick=function(event) {
 				if(!servers[server]) return;
 				tabs['misc-text'].path = `${serverRoot}${servers[server][platform]['phpmyadmin']}/config.inc.php`;
-				load('misc-text', `$cfg['AllowUserDropDatabase'] = true;\n$cfg['RetainQueryBox'] = true;\n`);
+				load('misc-text', servers[server][platform]['phpmyadmin-config']);
 				buttons['misc-text'].click();
 			};
 
@@ -348,18 +366,40 @@
 
 					let output = document.querySelector('div#php-result');
 					let result;
-					let php = spawn(interpreter,['-r', form.elements['code'].value]);
+					let cliArg = form.elements['php-tags'].checked ? '--' : '-r';
 
-					php.stdout.on('data', data => {
-			            results.push(data.toString());
-					});
-					php.stderr.on('data', data => {
-			            console.log(`php oops:\n${data}`);
-			        });
-					php.on('close', code => {
-						output.textContent = results.join('');
-			            console.log(`php closed: ${code}`);
-			        });
+					if(!form.elements['php-tags'].checked) {
+
+						let php = spawn(interpreter,['-r', form.elements['code'].value]);
+
+						php.stdout.on('data', data => {
+				            results.push(data.toString());
+						});
+						php.stderr.on('data', data => {
+				            console.log(`php oops:\n${data}`);
+				        });
+						php.on('close', code => {
+							output.textContent = results.join('');
+				            console.log(`php closed: ${code}`);
+				        });
+					}
+					else {
+						tmp = fsp.writeFile(`${os.tmpdir()}/tmp.php`,form.elements['code'].value).then(() => {
+						    php = spawn(interpreter,[`${os.tmpdir()}/tmp.php`]);
+							php.stdout.on('data', data => {
+					            results.push(data.toString());
+							});
+							php.stderr.on('data', data => {
+					            console.log(`php oops:\n${data}`);
+					        });
+							php.on('close', code => {
+								output.textContent = results.join('');
+					            console.log(`php closed: ${code}`);
+								fsp.unlink(`${os.tmpdir()}/tmp.php`);
+					        });
+					    });
+					}
+
 				}
 
 				function doPHP() {
@@ -375,40 +415,59 @@
 					event.preventDefault();
 					doPHP();
 				};
-				function setLineNumbers2(code, lineNumbers) {
+				function setLineNumbers2(code, lineNumbers, suffix) {
 					let lines = code.value.split(/\r?\n/).length;
-					lineNumbers.textContent = Array.from({length: lines},(v,i)=>i+1).join('\n');
+					lineNumbers.textContent = Array.from({length: lines},(v,i) => `${i+1}${suffix?' '+suffix:''}`).join('\n');
 				}
 				function handlePHPKeys(event) {
-					let key = event.key;
-					if(key == 'Tab') {
-						event.preventDefault();
-						let text = event.target.value;
-						let [start,end] = [event.target.selectionStart,event.target.selectionEnd];
-						if(start == end) {	//	simple tab
-							event.target.value = `${text.slice(0,start)}\t${text.slice(start)}`;
-							event.target.setSelectionRange(start+1, start+1);
-						}
-						else {				//	indent
-							start = text.lastIndexOf('\n',start);
-							event.target.value = `${text.slice(0,start)}${text.slice(start,end).replaceAll('\n','\n\t')}${text.slice(end)}`;
-							event.target.setSelectionRange(start+1, end+1);
-						}
-					}
-					else if(key == 'Enter' && (event.ctrlKey|| event.metaKey)) {
-						doPHP();
-						return true;
-					}
-					else if(Object.keys(brackets).includes(key)) {
-						event.preventDefault();
-						let text = event.target.value;
-						let [start,end] = [event.target.selectionStart,event.target.selectionEnd];
-						event.target.value = `${text.slice(0,start)}${event.key}${text.slice(start,end)}${brackets[event.key]}${text.slice(end)}`;
-						event.target.setSelectionRange(start+1,end+1);
-						return true;
-
-					}
-					else return true;
+					let brackets = {"'":"'",'"':'"','`':'`','(':')','{':'}','[':']','“':'”','‘':'’','«':'»'};
+				    let key = event.key;
+				    let text = event.target.value;
+				    let [start,end] = [event.target.selectionStart,event.target.selectionEnd];
+				    if(key == 'Tab') {
+				        if(start == end) {	//	simple tab
+				            event.target.value = `${text.slice(0,start)}\t${text.slice(start)}`;
+				            event.target.setSelectionRange(start+1, start+1);
+				            //	return true;
+				        }
+				        else {				//	indent
+				            start = text.lastIndexOf('\n',start);
+				            event.target.value = `${text.slice(0,start)}${text.slice(start,end).replaceAll('\n','\n\t')}${text.slice(end)}`;
+				            event.target.setSelectionRange(start+1, end+1);
+				        }
+				        event.preventDefault();
+				    }
+				    else if(key == 'Enter') {
+				        if(event.ctrlKey|| event.metaKey) {
+				            doPHP();
+				        }
+				        else {
+				            let firstPart = event.target.value.slice(0,start);
+				            let nl = firstPart.search(/\r?\n(?![\s\S]*\r?\n)/);
+				            let indent = firstPart.slice(nl+1).match(/^\s*/)[0];
+				            event.target.value = `${firstPart}\n${indent}${text.slice(end)}`;
+				            event.target.setSelectionRange(start+indent.length+1, start+indent.length+1);
+				        }
+				        event.preventDefault();
+				    }
+				    else if(Object.keys(brackets).includes(key)) {
+//				        if(start==end) {	// && text.charAt(start-1)==brackets[key]) {
+				            //	console.log(`start == end ${start}: [${text.charAt(start-1)}]\n`);
+//				            event.target.setSelectionRange(start+1,end+1);
+//				            event.preventDefault();
+//				        }
+//				        else {
+				            event.target.value = `${text.slice(0,start)}${key}${text.slice(start,end)}${brackets[key]}${text.slice(end)}`;
+				            event.target.setSelectionRange(start+1,end+1);
+				            event.preventDefault();
+//				        }
+//				        event.preventDefault();
+				    }
+				    else if(Object.values(brackets).includes(key) && key==text.charAt(start)) {
+				        event.target.setSelectionRange(start+1,end+1);
+				        event.preventDefault();
+				    }
+				    else return true;
 				}
 
 				let code = form.elements['code'];
@@ -417,7 +476,7 @@
 				code.onkeydown = handlePHPKeys;
 				code.oninput = event => {
 //					Prism.highlightElement(code);
-					setLineNumbers2(code, lineNumbers);
+					setLineNumbers2(code, lineNumbers, '»');
 				};
 				code.onblur = event => {
 
@@ -433,22 +492,18 @@
 				setLineNumbers2(code, lineNumbers);
 			}
 
-
 		//	Footer
-
 			footer=document.querySelector('footer');
 			footerPath=document.querySelector('p#path');
 			footerMessage=document.querySelector('p#message');
 
 		//	Search
-
 			searchForm=document.querySelector('form#search');
 			searchForm.elements['find'].onclick=newSearch;
 			//	searchForm.elements['replace'].onclick=replace;
 			searchForm.style.display='none';
 
 		//	About etc
-
 			about=document.querySelector('div#about');
 			jx.draggable(about);
 			doShowAbout=jx.popup(about,null,{escape: true});
@@ -468,13 +523,8 @@
 
 	if(DEVELOPMENT) {
 		buttons['settings'].click();
-		forms['php-runner'].elements['code'].value = `$a = 'This space for rent';
-$b = 'Watch this space …';
-$r = rand(0,1);
-print $r ? $a : $b;
-print PHP_EOL;
-print PHP_VERSION;
-`;
+		forms['php-runner'].elements['code'].value = fs.readFileSync(path.join(__dirname, '../data/sample-php.txt')).toString().normaliseBR(os.EOL);;
+		setLineNumbers('php-runner','»');
 	}
 	else buttons['settings'].click();
 
@@ -525,9 +575,9 @@ console.log(204)
 		});
 	}
 
-	function setLineNumbers(tab) {
-		var lines=tabs[tab].content.value.split(/\r?\n/).length;
-		tabs[tab].lineNumbers.textContent=Array.from({length: lines},(v,i)=>i+1).join('\n');
+	function setLineNumbers(tab, suffix) {
+		var lines = tabs[tab].content.value.split(/\r?\n/).length;
+		tabs[tab].lineNumbers.textContent = Array.from({length: lines}, (v,i) => `${i+1}${suffix ? ' '+suffix : ''}`).join('\n');
 	}
 
 //	Tab Key
@@ -578,8 +628,8 @@ console.log(204)
 				resolve(data);
 			})
 			.catch(error=>{
-				forms[tab].elements['content'].value='';
-				tabMessage(tab,'Not available','not-available');
+				forms[tab].elements['content'].value = '';
+				tabMessage(tab,'Not available', 'not-available');
 				setLineNumbers(tab);
 
 				console.log(error);
@@ -674,13 +724,13 @@ console.log(204)
 	}
 
 //	IPC DOIT Actions
-	ipcRenderer.on('DOIT',(event,action,data,more)=>{
+	ipcRenderer.on('DOIT', (event, action, data, more) => {
 console.log(action);
 console.log(data);
 console.log(more);
 		switch(action) {
 			case 'find':
-				searchData={
+				searchData = {
 					string: data,
 					fromIndex: 0,
 					caseSensitive: false
@@ -691,11 +741,12 @@ console.log(more);
 				ipcRenderer.send('open-file',{
 					title: 'Title',
 					defaultPath: tabs[tab].path,
-				},'sendmail-path');
-				ipcRenderer.on('sendmail-path',(event,result)=>{
+				}, 'sendmail-path');
+				ipcRenderer.on('sendmail-path',(event, result) => {
 					console.log(result);
 					if(result.canceled) return;
 					var path = result.filePaths[0].toString();
+					path = `"${path.replace(' ','\\ ')}"`;
 					clipboard.writeText(path);
 				});
 				break;
@@ -722,8 +773,9 @@ console.log(more);
 			case 'OPEN':
 				openDialog();
 				break;
-			case 'LOAD':
+			case 'RELOAD':
 				load(tab);
+				tabs[tab].button.removeAttribute('data-status');
 				break;
 			case 'SAVE':
 				save();

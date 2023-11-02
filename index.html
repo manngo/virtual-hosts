@@ -41,6 +41,7 @@
 						<li>Choose a Web Server Package</li>
 						<li>If you have installed the Web Server in a non-default location, select the folder.</li>
 						<li>If you prefer to use a different PHP Interpreter, choose the alternative interpreter executable.</li>
+						<li>Save the Settings for next time …</li>
 					</ol>
 				</div>
 				<div id="misc">
@@ -61,6 +62,7 @@
 					-->
 					<output type="text" name="server-root" value="" placeholder="Leave empty for default" title="Full Path to Server Folder"></output>
 					<button name="server-path">Select Folder …</button>
+					<button name="server-path-default">Default</button>
 				</div>
 				<div id="choose-php-interpreter">
 					<h4>Choose a PHP Interpreter</h4>
@@ -70,6 +72,10 @@
 					-->
 					<output name="php-interpreter" value="" placeholder="Leave empty for default" title="Full Path to PHP Interpreter"></output>
 					<button name="php-interpreter-path">Select Interpreter …</button>
+					<button name="php-interpreter-path-default">Default …</button>
+				</div>
+				<div id="save-settings">
+					<button name="save-settings">Save</button>
 				</div>
 			</form>
 			<form id="hosts-file">
@@ -82,7 +88,7 @@
 					</ol>
 				</div>
 				<div class="textarea etc">
-					<textarea name="content">Open hosts file or Select Platform</textarea>
+					<textarea name="content" spellcheck="false">Open hosts file or Select Platform</textarea>
 				</div>
 			</form>
 			<form id="httpd-conf">
@@ -103,7 +109,7 @@
 					</ol>
 				</div>
 				<div class="textarea etc">
-					<textarea name="content">Open httpd.conf file or Select Platform</textarea>
+					<textarea name="content" spellcheck="false">Open httpd.conf file or Select Platform</textarea>
 				</div>
 			</form>
 			<form id="virtual-hosts">
@@ -117,7 +123,7 @@
 					</ol>
 				</div>
 				<div class="textarea etc">
-					<textarea name="content">Open vhosts.conf file or Select Platform</textarea>
+					<textarea name="content" spellcheck="false">Open vhosts.conf file or Select Platform</textarea>
 				</div>
 			</form>
 			<form id="generator">
@@ -135,7 +141,7 @@
 					<p><label for="root">Document Root</label><input type="text" id="root" name="root" value="…/…/example" placeholder="…/…/example" title="Full Path to Root Folder"><button name="path">Select Folder …</button></p>
 					<button name="generate">Generate</button>
 				</div>
-				<div class="textarea"><textarea name="content" class="textarea">The cat sat on the mat</textarea></div>
+				<div class="textarea"><textarea name="content" class="textarea" spellcheck="false">The cat sat on the mat</textarea></div>
 			</form>
 			<form id="php-ini">
 				<div class="help">
@@ -154,7 +160,7 @@
 					</ol>
 				</div>
 				<div class="textarea etc">
-					<textarea name="content">Open php.ini file or Select Platform</textarea>
+					<textarea name="content" spellcheck="false">Open php.ini file or Select Platform</textarea>
 				</div>
 			</form>
 			<form id="misc-text">
@@ -162,7 +168,7 @@
 					<h3>Miscellaeous Text File</h3>
 				</div>
 				<div class="textarea etc">
-					<textarea name="content">Open any file</textarea>
+					<textarea name="content" spellcheck="false">Open any file</textarea>
 				</div>
 			</form>
 			<form id="misc-actions">
@@ -172,7 +178,7 @@
 				<div class="etc">
 					<p><button type="button" name="reset-mysql">Reset MySQL</button></p>
 					<p><button type="button" name="phpmyadmin-css">PHPMyAdmin CSS</button><button type="button" name="phpmyadmin-css-append">Append CSS Settings</button></p>
-					<p><button type="button" name="phpmyadmin-config">PHPMyAdmin Config</button><button type="button" name="phpmyadmin-config-pappend">Append Config Settings</button></p>
+					<p><button type="button" name="phpmyadmin-config">PHPMyAdmin Config</button><button type="button" name="phpmyadmin-config-append">Append Config Settings</button></p>
 				</div>
 			</form>
 			<form id="php-runner">
@@ -180,16 +186,13 @@
 					<h3>PHP Runner</h3>
 				</div>
 				<div id="php-code">
-					<textarea name="code" placeholder="Enter your PHP"></textarea>
+					<textarea name="code" placeholder="Enter your PHP" spellcheck="false"></textarea>
 					<code class="language-php" contenteditable="true">Content</code>
-					<button name="doit">Run</button>
+					<div id="php-control">
+						<label><input type="checkbox" name="php-tags"> HTML Mode</label>
+						<button name="doit">Run</button>
+					</div>
 				</div>
-<!--
-				<div id="php-control">
-					<label><input type="checkbox" name="html"> HTML Mode</label>
-					<button name="doit">Run</button>
-				</div>
--->
 				<div id="php-result">
 
 				</div>

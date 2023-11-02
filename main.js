@@ -28,7 +28,7 @@
             submenu: [
                 {	label: `New Document`, accelerator: 'CmdOrCtrl+N', id:'NEW', click: send },
                 {	label: `Open …`, accelerator: 'CmdOrCtrl+O', id:'OPEN', click: send },
-                {	label: `Reload`, accelerator: 'CmdOrCtrl+R', id:'LOAD', click: send },
+                {	label: `Reload`, accelerator: 'CmdOrCtrl+R', id:'RELOAD', click: send },
                 {	label: `Save`, accelerator: 'CmdOrCtrl+S', id:'SAVE', click: send },
                 {	label: `Save As …`, accelerator: 'CmdOrCtrl+Shift+S', id:'SAVEAS', click: send },
 				{	type:'separator' },

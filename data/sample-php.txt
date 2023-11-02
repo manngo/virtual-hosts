@@ -1,0 +1,22 @@
+<?php
+	$size = ' 23 x 45';
+	$pattern = '/^\s*(\d+)\s*[xX]\s*(\d+)\s*$/';
+	preg_match($pattern, $size, $matches);
+	print_r($matches);
+	[,$width,$height] = $matches;
+	print "width: $width\nheight: $height";
+?>
+<?php $a = 12 * 3; ?>
+I got <?= $a; ?>
+	hohoho
+Good, innit?
+
+<?php $sent = false; ?>
+	Testing
+<?php if($sent): ?>
+	plan a
+<?php else: ?>
+	plan b
+<?php endif; ?>
+	Finally
+	
